@@ -102,10 +102,9 @@ nav.scrolled{border-bottom-color:var(--line)}
   object-fit:cover;
   object-position:center 25%;
   display:block;
-  filter:grayscale(1) contrast(1.05);
-  transition:filter .6s ease;
+  filter:none;
 }
-.hero-image:hover img{filter:grayscale(0) contrast(1.02)}
+.hero-image:hover img{filter:none}
 .hero-image::before{
   content:"";position:absolute;inset:-12px -12px auto auto;
   width:60px;height:60px;
@@ -400,10 +399,9 @@ h2.section-h em{font-style:italic;color:var(--accent);font-weight:300}
   object-fit:cover;
   object-position:center;
   display:block;
-  filter:grayscale(1) contrast(1.05);
-  transition:filter .6s ease;
+  filter:none;
 }
-.case-image-col:hover .case-img-full{filter:grayscale(0) contrast(1.02)}
+.case-image-col:hover .case-img-full{filter:none}
 .case-image-col::before{
   content:"";position:absolute;inset:-12px auto auto -12px;
   width:60px;height:60px;
@@ -533,11 +531,10 @@ h2.case-h em{font-style:italic;color:var(--accent);font-weight:300}
 .cv-photo-card img{
   width:100%;aspect-ratio:3/4;object-fit:cover;
   object-position:center 20%;
-  filter:grayscale(1) contrast(1.05);
-  transition:filter .6s ease;
+  filter:none;
   display:block;
 }
-.cv-photo-card:hover img{filter:grayscale(0) contrast(1.02)}
+.cv-photo-card:hover img{filter:none}
 .cv-photo-card-meta{
   display:flex;justify-content:space-between;align-items:center;
   margin-top:.7rem;padding:0 .2rem;
@@ -682,11 +679,10 @@ h2.case-h em{font-style:italic;color:var(--accent);font-weight:300}
 .contact-photo-wrap{position:relative}
 .contact-photo{
   width:100%;aspect-ratio:4/5;object-fit:cover;
-  filter:grayscale(1) contrast(1.05);
-  transition:filter .6s ease;
+  filter:none;
   display:block;
 }
-.contact-photo:hover{filter:grayscale(0) contrast(1.02)}
+.contact-photo:hover{filter:none}
 .contact-badge{
   position:absolute;
   bottom:1rem;left:1rem;
@@ -815,6 +811,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
   </div>
 
   <div class="hero-image">
+    <img src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/197%20-%20Bernd%20Alsleben%20%28199%20von%20796%29.jpg" alt="Henning Sanders beim Vortrag" loading="lazy">
     <div class="caption">Henning · Vortrag 2025</div>
   </div>
 </section>
@@ -955,6 +952,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
     <div class="case-grid">
       <!-- LINKS: Bild über volle Spalte -->
       <div class="case-image-col">
+        <img class="case-img-full" src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/191%20-%20Bernd%20Alsleben%20%28193%20von%20796%29.jpg" alt="Henning Sanders präsentiert bei 11teamsports" loading="lazy">
         <div class="case-img-meta">
           <span>11teamsports · Hannover</span>
           <span>Q4 2025 — Live</span>
@@ -985,28 +983,6 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
             <li><b>Emarsys</b><span>Order- &amp; Invoice-Mails</span></li>
           </ul>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- DSAG-ARCHITEKTUR -->
-<div class="dsag" id="dsag">
-  <div class="dsag-inner">
-    <div>
-      <div class="eyebrow">Vortrag · DSAG-Jahrestagung</div>
-      <h2>Vorgestellt als <em>SAP-Referenz</em>­architektur.</h2>
-      <p>
-        Die bei 11teamsports umgesetzte Cloud-Architektur dient SAP heute als Referenz für andere Retail-Kunden — vom Pilotsystem bis zum Headquarter-Rollout.
-      </p>
-      <p>
-        Kern: S/4HANA PCE als Clean Core, OMF/OMSA als zentraler Orchestrator, eventbasierte Anbindung von Commerce Cloud, Adyen, ParcelLab und Emarsys über die SAP Integration Suite.
-      </p>
-    </div>
-    <div class="dsag-img-wrap">
-      <div class="dsag-img-cap">
-        <span>Referenzarchitektur</span>
-        <span>DSAG · 2025</span>
       </div>
     </div>
   </div>
@@ -1043,6 +1019,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
     <!-- LINKS: Foto + La Marmotte -->
     <div class="cv-photo-col">
       <div class="cv-photo-card">
+        <img src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/Henning-10964.jpg" alt="Henning Sanders Portrait" loading="lazy">
         <div class="cv-photo-card-meta">
           <span>Henning Sanders</span>
           <b>2026</b>
@@ -1136,6 +1113,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
 <div class="contact-wrap" id="contact">
   <div class="contact-inner">
     <div class="contact-photo-wrap">
+      <img class="contact-photo" src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/320%20-%20Bernd%20Alsleben%20%28322%20von%20796%29.jpg" alt="Henning Sanders" loading="lazy">
       <div class="contact-badge">Offen für Projekte</div>
     </div>
 
