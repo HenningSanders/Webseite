@@ -973,7 +973,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
           11teamsports kam aus einem stark angepassten ERP-System, das über Jahre hinweg sämtliche Geschäftslogik abbildete. Die hohe Customizing-Rate machte Updates praktisch unmöglich — und viel Wissen existierte nur in den Köpfen einzelner Mitarbeiter.
         </p>
         <p class="case-body">
-          Die strategische Entscheidung: ein vollständiger Wechsel auf SAP — mit den neuesten Produkten im Backend und Frontend. Um die Einführung von Order Management Foundation, OMSA, Integration Suite und S/4HANA strukturiert und ohne große Komplikationen umzusetzen, haben wir den <strong>Decapabilities-Ansatz</strong> gewählt: zuerst das neue Frontend an die alte Backend-Welt angebunden, dann schrittweise die alte durch die neue Welt ersetzt.
+          Die strategische Entscheidung: ein vollständiger Wechsel auf SAP — mit den neuesten Produkten im Backend und Frontend. Um die Einführung von Order Management Foundation, OMSA, Integration Suite und S/4HANA strukturiert und ohne große Komplikationen umzusetzen, haben wir den <strong>Capabilities-Ansatz</strong> gewählt: zuerst das neue Frontend an die alte Backend-Welt angebunden, dann schrittweise die alte durch die neue Welt ersetzt.
         </p>
         <p class="case-body">
           Gleichzeitig wurde Logik konsequent aus dem ERP herausgelöst und in die Cloud-Systeme verlagert — für ein schlankes, wartbares Clean-Core-Setup. Heute dient die Architektur als SAP-Referenz, vorgestellt auf der DSAG-Jahrestagung und der ESUG Onsite.
@@ -985,9 +985,11 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
             <li><b>OMF</b><span>Order Management Foundation</span></li>
             <li><b>OMSA</b><span>Sourcing &amp; Availability</span></li>
             <li><b>S/4HANA PCE</b><span>Clean-Core ERP</span></li>
-            <li><b>Integration Suite</b><span>Event-Routing &amp; APIs</span></li>
+            <li><b>Integration Suite</b><span>Connector / Middleware</span></li>
+            <li><b>EventHub / EventMesh</b><span>Event Broker</span></li>
             <li><b>Commerce Cloud</b><span>Customer Experience</span></li>
-            <li><b>Adyen · ParcelLab</b><span>PSP, Shipping</span></li>
+            <li><b>Adyen / PayPal</b><span>Payment Service Provider</span></li>
+            <li><b>ParcelLab</b><span>Versanddienstleister-Integration</span></li>
             <li><b>Emarsys</b><span>Order- &amp; Invoice-Mails</span></li>
           </ul>
         </div>
@@ -1021,10 +1023,10 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
     </div>
   </dl>
 
-  <!-- Hauptbereich: Timeline volle Breite -->
-  <div class="cv-body" style="grid-template-columns:1fr">
+  <!-- Hauptbereich: Zweispaltig -->
+  <div class="cv-body" style="grid-template-columns:1.4fr 1fr">
 
-    <!-- Timeline -->
+    <!-- LINKS: Berufserfahrung -->
     <div class="cv-timeline-col">
 
       <div class="cv-timeline-section">
@@ -1080,6 +1082,10 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
 
         </div>
       </div>
+    </div>
+
+    <!-- RECHTS: Ausbildung + Persönliches -->
+    <div class="cv-timeline-col">
 
       <div class="cv-timeline-section">
         <div class="cv-section-label"><span>Ausbildung</span></div>
@@ -1092,6 +1098,21 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
             <div class="cv-role">BSc Business Management · 1,0 First Class Honours</div>
             <div class="cv-company"><b>Oxford Brookes University</b> · UK</div>
             <p class="cv-desc">Strategie, Marketing, Finanzwesen, Operations. Supply-Chain-Praktikum bei BMW Group, Oxford.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cv-timeline-section">
+        <div class="cv-section-label"><span>Persönliches</span></div>
+
+        <div class="cv-timeline-list">
+          <div class="cv-entry reveal">
+            <div class="cv-entry-head">
+              <span class="cv-year">2023</span>
+            </div>
+            <div class="cv-role">La Marmotte · Rennrad</div>
+            <div class="cv-company"><b>180 km</b> · 5 000 Höhenmeter · 10 h 30 min</div>
+            <p class="cv-desc">Leidenschaftlicher Rennradfahrer — eine der härtesten Radmarathons der Alpen erfolgreich abgeschlossen.</p>
           </div>
         </div>
       </div>
