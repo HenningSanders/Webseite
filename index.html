@@ -435,6 +435,21 @@ h2.case-h em{font-style:italic;color:var(--accent);font-weight:300}
   max-width:56ch;margin:0 0 1.2rem;
 }
 
+.case-download{
+  display:inline-flex;align-items:center;gap:.6rem;
+  margin-top:.8rem;
+  padding:.7rem 1.2rem;
+  font-size:.82rem;letter-spacing:.03em;font-weight:600;
+  color:var(--paper);
+  border:1px solid rgba(255,255,255,.2);
+  transition:background .25s, border-color .25s, gap .25s;
+}
+.case-download:hover{
+  background:rgba(199,70,28,.15);
+  border-color:var(--accent);
+  gap:.9rem;
+}
+
 .case-stack{
   margin-top:2rem;
   border-top:1px solid rgba(255,255,255,.1);
@@ -829,7 +844,6 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
 
 <!-- ABOUT / Was ich kann und wie ich arbeite -->
 <section id="about">
-  <div class="eyebrow">Profil · 2026</div>
 
   <!-- Tab Switcher -->
   <div class="ability-tabs" role="tablist">
@@ -980,22 +994,30 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
           Gleichzeitig wurde Logik konsequent aus dem ERP herausgelöst und in die Cloud-Systeme verlagert — für ein schlankes, wartbares Clean-Core-Setup. Heute dient die Architektur als SAP-Referenz, vorgestellt auf der DSAG-Jahrestagung und der ESUG Onsite.
         </p>
 
-        <div class="case-stack">
-          <h4>Tech Stack</h4>
-          <ul>
-            <li><b>OMF</b><span>Order Management Foundation</span></li>
-            <li><b>OMSA</b><span>Sourcing &amp; Availability</span></li>
-            <li><b>S/4HANA PCE</b><span>Clean-Core ERP</span></li>
-            <li><b>Integration Suite</b><span>Connector / Middleware</span></li>
-            <li><b>EventHub / EventMesh</b><span>Event Broker</span></li>
-            <li><b>Commerce Cloud</b><span>Customer Experience</span></li>
-            <li><b>Adyen / PayPal</b><span>Payment Service Provider</span></li>
-            <li><b>ParcelLab</b><span>Versanddienstleister-Integration</span></li>
-            <li><b>Emarsys</b><span>Order- &amp; Invoice-Mails</span></li>
-          </ul>
-        </div>
+        <a href="onepager.pdf" target="_blank" rel="noopener" class="case-download">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          One-Pager herunterladen
+        </a>
+
       </div>
     </div>
+
+    <!-- Tech Stack volle Breite unter dem Grid -->
+    <div class="case-stack">
+      <h4>Tech Stack</h4>
+      <ul>
+        <li><b>OMF</b><span>Order Management Foundation</span></li>
+        <li><b>OMSA</b><span>Sourcing &amp; Availability</span></li>
+        <li><b>S/4HANA PCE</b><span>Clean-Core ERP</span></li>
+        <li><b>Integration Suite</b><span>Connector / Middleware</span></li>
+        <li><b>EventHub / EventMesh</b><span>Event Broker</span></li>
+        <li><b>Commerce Cloud</b><span>Customer Experience</span></li>
+        <li><b>Adyen / PayPal</b><span>Payment Service Provider</span></li>
+        <li><b>ParcelLab</b><span>Versanddienstleister-Integration</span></li>
+        <li><b>Emarsys</b><span>Order- &amp; Invoice-Mails</span></li>
+      </ul>
+    </div>
+
   </div>
 </div>
 
@@ -1019,8 +1041,8 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
       <dd>DE · EN <small>Muttersprache · C2 (Studium UK)</small></dd>
     </div>
     <div>
-      <dt>Methodik</dt>
-      <dd>IPMA · SAP Activate <small>Solution Architecture, Clean Core, Event-Driven</small></dd>
+      <dt>Zertifizierungen</dt>
+      <dd>IPMA · SAP Activate <small>Projektmanagement zertifiziert</small></dd>
     </div>
   </dl>
 
