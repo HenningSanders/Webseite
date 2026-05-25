@@ -217,16 +217,18 @@ h2.section-h em{font-style:italic;color:var(--accent);font-weight:300}
 }
 
 .ability-tab{
-  background:none;border:0;padding:0;cursor:pointer;
+  background:none;border:0;padding:1.2rem 1.5rem;cursor:pointer;
   text-align:left;
   display:flex;flex-direction:column;gap:.4rem;
   font-family:var(--sans);
   position:relative;
-  transition:opacity .35s ease;
-  opacity:.35;
+  transition:opacity .35s ease, background .35s ease, border-color .35s ease;
+  opacity:.45;
+  border:1px solid var(--line);
+  border-radius:2px;
 }
-.ability-tab:hover{opacity:.7}
-.ability-tab.active{opacity:1;cursor:default}
+.ability-tab:hover{opacity:.75;background:rgba(199,70,28,.03)}
+.ability-tab.active{opacity:1;cursor:default;background:rgba(199,70,28,.05);border-color:var(--accent)}
 
 .ability-tab-num{
   font-family:var(--serif);font-style:italic;font-weight:400;
@@ -434,21 +436,29 @@ h2.case-h em{font-style:italic;color:var(--accent);font-weight:300}
 }
 
 .case-stack{
-  border:1px solid rgba(255,255,255,.15);
-  padding:1.5rem;margin-top:1.8rem;
+  margin-top:2rem;
 }
 .case-stack h4{
   font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--accent);margin:0 0 1rem;font-weight:600;
+  color:var(--accent);margin:0 0 1.2rem;font-weight:600;
 }
-.case-stack ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.case-stack ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:.6rem}
 .case-stack li{
-  display:grid;grid-template-columns:120px 1fr;gap:.8rem;align-items:baseline;
-  font-size:.9rem;padding-bottom:.5rem;border-bottom:1px dashed rgba(255,255,255,.1);
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-size:.82rem;
+  padding:.55rem 1rem;
+  border:1px solid rgba(199,70,28,.3);
+  border-radius:99px;
+  background:rgba(199,70,28,.08);
+  transition:background .25s, border-color .25s, transform .2s;
 }
-.case-stack li:last-child{border-bottom:0;padding-bottom:0}
-.case-stack li b{color:var(--accent);font-size:.8rem;font-weight:500;letter-spacing:.04em}
-.case-stack li span{color:#c9c2b3}
+.case-stack li:hover{
+  background:rgba(199,70,28,.15);
+  border-color:var(--accent);
+  transform:translateY(-1px);
+}
+.case-stack li b{color:var(--accent);font-size:.78rem;font-weight:600;letter-spacing:.04em}
+.case-stack li span{color:#c9c2b3;font-size:.75rem}
 
 /* ------- DSAG Architektur ------- */
 .dsag{
@@ -819,77 +829,23 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
 <!-- ABOUT / Was ich kann und wie ich arbeite -->
 <section id="about">
   <div class="eyebrow">Profil · 2026</div>
-  <h2 class="section-h">Architektur, die <em>hält</em>. Auch wenn das Geschäft sich dreht.</h2>
 
   <!-- Tab Switcher -->
   <div class="ability-tabs" role="tablist">
-    <button class="ability-tab active" role="tab" aria-selected="true" data-target="panel-arbeit">
-      <span class="ability-tab-num">01 — Haltung</span>
-      <span class="ability-tab-label">Wie ich <em>arbeite</em></span>
-      <span class="ability-tab-sub">Vier Prinzipien</span>
-    </button>
-    <button class="ability-tab" role="tab" aria-selected="false" data-target="panel-mitbringe">
-      <span class="ability-tab-num">02 — Tech</span>
+    <button class="ability-tab active" role="tab" aria-selected="true" data-target="panel-mitbringe">
+      <span class="ability-tab-num">01 — Tech</span>
       <span class="ability-tab-label">Was ich <em>mitbringe</em></span>
       <span class="ability-tab-sub">Vier Bereiche</span>
     </button>
+    <button class="ability-tab" role="tab" aria-selected="false" data-target="panel-arbeit">
+      <span class="ability-tab-num">02 — Haltung</span>
+      <span class="ability-tab-label">Wie ich <em>arbeite</em></span>
+      <span class="ability-tab-sub">Vier Prinzipien</span>
+    </button>
   </div>
 
-  <!-- Panel 1: Wie ich arbeite -->
-  <div class="ability-panel active" id="panel-arbeit" role="tabpanel">
-    <div class="ability-block">
-      <div class="ability-index">
-
-        <article class="ability-row reveal">
-          <div class="ability-row-meta">
-            <span class="ability-row-num">01</span>
-            <span class="ability-row-cat">Haltung</span>
-          </div>
-          <div class="ability-row-body">
-            <h4>Locker und menschennah</h4>
-            <p>Die besten Projekte entstehen, wenn Leute gerne miteinander arbeiten. Ich rede Klartext, lache gern und wahre eine gewisse Lockerheit — Probleme lösen geht nur zusammen.</p>
-          </div>
-        </article>
-
-        <article class="ability-row reveal">
-          <div class="ability-row-meta">
-            <span class="ability-row-num">02</span>
-            <span class="ability-row-cat">Methode</span>
-          </div>
-          <div class="ability-row-body">
-            <h4>Klare Methodik, klares Ziel</h4>
-            <p>Meine Zeit in der Pharmaindustrie hat mir Struktur gelehrt — von Anforderungsaufnahme bis Inbetriebnahme. Diese Leitplanken nutze ich heute noch.</p>
-          </div>
-        </article>
-
-        <article class="ability-row reveal">
-          <div class="ability-row-meta">
-            <span class="ability-row-num">03</span>
-            <span class="ability-row-cat">Tempo</span>
-          </div>
-          <div class="ability-row-body">
-            <h4>So effizient wie möglich</h4>
-            <p>Kleine, schlagkräftige Teams. Kurze Wege, jeder involviert. Routine-Aufgaben werden konsequent an KI ausgelagert.</p>
-          </div>
-        </article>
-
-        <article class="ability-row reveal">
-          <div class="ability-row-meta">
-            <span class="ability-row-num">04</span>
-            <span class="ability-row-cat">Perspektive</span>
-          </div>
-          <div class="ability-row-body">
-            <h4>End-to-End denken</h4>
-            <p>Vom Stammdatum über die Bestellung bis zur Retoure — nur wer das große Bild sieht, baut Architektur, die später nicht reißt.</p>
-          </div>
-        </article>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- Panel 2: Was ich mitbringe — gleiches Index-Layout, anderer Inhalt -->
-  <div class="ability-panel" id="panel-mitbringe" role="tabpanel">
+  <!-- Panel 1: Was ich mitbringe (jetzt zuerst) -->
+  <div class="ability-panel active" id="panel-mitbringe" role="tabpanel">
     <div class="ability-block">
       <div class="ability-index">
 
@@ -944,6 +900,59 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
     </div>
   </div>
 
+  <!-- Panel 2: Wie ich arbeite -->
+  <div class="ability-panel" id="panel-arbeit" role="tabpanel">
+    <div class="ability-block">
+      <div class="ability-index">
+
+        <article class="ability-row reveal">
+          <div class="ability-row-meta">
+            <span class="ability-row-num">01</span>
+            <span class="ability-row-cat">Haltung</span>
+          </div>
+          <div class="ability-row-body">
+            <h4>Locker und menschennah</h4>
+            <p>Die besten Projekte entstehen, wenn Leute gerne miteinander arbeiten. Ich rede Klartext, lache gern und wahre eine gewisse Lockerheit — Probleme lösen geht nur zusammen.</p>
+          </div>
+        </article>
+
+        <article class="ability-row reveal">
+          <div class="ability-row-meta">
+            <span class="ability-row-num">02</span>
+            <span class="ability-row-cat">Methode</span>
+          </div>
+          <div class="ability-row-body">
+            <h4>Klare Methodik, klares Ziel</h4>
+            <p>Meine Zeit in der Pharmaindustrie hat mir Struktur gelehrt — von Anforderungsaufnahme bis Inbetriebnahme. Diese Leitplanken nutze ich heute noch.</p>
+          </div>
+        </article>
+
+        <article class="ability-row reveal">
+          <div class="ability-row-meta">
+            <span class="ability-row-num">03</span>
+            <span class="ability-row-cat">Tempo</span>
+          </div>
+          <div class="ability-row-body">
+            <h4>So effizient wie möglich</h4>
+            <p>Kleine, schlagkräftige Teams. Kurze Wege, jeder involviert. Routine-Aufgaben werden konsequent an KI ausgelagert.</p>
+          </div>
+        </article>
+
+        <article class="ability-row reveal">
+          <div class="ability-row-meta">
+            <span class="ability-row-num">04</span>
+            <span class="ability-row-cat">Perspektive</span>
+          </div>
+          <div class="ability-row-body">
+            <h4>End-to-End denken</h4>
+            <p>Vom Stammdatum über die Bestellung bis zur Retoure — nur wer das große Bild sieht, baut Architektur, die später nicht reißt.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+
 </section>
 
 <!-- CASE 11TEAMSPORTS -->
@@ -953,10 +962,6 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
       <!-- LINKS: Bild über volle Spalte -->
       <div class="case-image-col">
         <img class="case-img-full" src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/191%20-%20Bernd%20Alsleben%20%28193%20von%20796%29.jpg" alt="Henning Sanders präsentiert bei 11teamsports" loading="lazy">
-        <div class="case-img-meta">
-          <span>11teamsports · Hannover</span>
-          <span>Q4 2025 — Live</span>
-        </div>
       </div>
 
       <!-- RECHTS: Einleitung + Tech Stack -->
@@ -1013,26 +1018,10 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
     </div>
   </dl>
 
-  <!-- Hauptbereich: Foto links + Timeline rechts -->
-  <div class="cv-body">
+  <!-- Hauptbereich: Timeline volle Breite -->
+  <div class="cv-body" style="grid-template-columns:1fr">
 
-    <!-- LINKS: Foto + La Marmotte -->
-    <div class="cv-photo-col">
-      <div class="cv-photo-card">
-        <img src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/Henning-10964.jpg" alt="Henning Sanders Portrait" loading="lazy">
-        <div class="cv-photo-card-meta">
-          <span>Henning Sanders</span>
-          <b>2026</b>
-        </div>
-      </div>
-
-      <div class="cv-quote">
-        <p><b>Abseits der Arbeit:</b> Leidenschaftlicher Rennradfahrer — die <b>La Marmotte</b>, 180 km und 5000 Höhenmeter, in 10 h 30 min abgeschlossen.</p>
-        <div class="cv-quote-meta">Persönliches · La Marmotte 2023</div>
-      </div>
-    </div>
-
-    <!-- RECHTS: Timeline -->
+    <!-- Timeline -->
     <div class="cv-timeline-col">
 
       <div class="cv-timeline-section">
