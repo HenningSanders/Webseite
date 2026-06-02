@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="de">
 <head>
@@ -459,8 +460,20 @@ h2.case-h em{font-style:italic;color:var(--accent);font-weight:300}
   font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
   color:var(--accent);margin:0 0 .8rem;font-weight:600;
 }
-.case-stack ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:.4rem}
-.case-stack li{
+.stack-layer{
+  display:grid;
+  grid-template-columns:150px 1fr;
+  gap:1rem;
+  padding:.7rem 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.stack-layer:last-child{border-bottom:none;padding-bottom:0}
+.stack-layer-label{
+  font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;
+  color:#8a837a;padding-top:.35rem;
+}
+.stack-layer-items{display:flex;flex-wrap:wrap;gap:.4rem}
+.stack-pill{
   display:inline-flex;align-items:baseline;gap:.35rem;
   font-size:.76rem;
   padding:.3rem .65rem;
@@ -469,12 +482,16 @@ h2.case-h em{font-style:italic;color:var(--accent);font-weight:300}
   background:rgba(255,255,255,.05);
   transition:background .25s, border-color .25s;
 }
-.case-stack li:hover{
+.stack-pill:hover{
   background:rgba(199,70,28,.1);
   border-color:rgba(199,70,28,.3);
 }
-.case-stack li b{color:var(--accent);font-size:.72rem;font-weight:600;letter-spacing:.02em}
-.case-stack li span{color:#a8a094;font-size:.68rem}
+.stack-pill b{color:var(--accent);font-size:.72rem;font-weight:600;letter-spacing:.02em}
+.stack-pill span{color:#a8a094;font-size:.68rem}
+@media(max-width:600px){
+  .stack-layer{grid-template-columns:1fr;gap:.45rem;padding:.6rem 0}
+  .stack-layer-label{padding-top:0}
+}
 
 /* ------- DSAG Architektur ------- */
 .dsag{
@@ -569,7 +586,7 @@ h2.case-h em{font-style:italic;color:var(--accent);font-weight:300}
 }
 .cv-photo-card-meta b{color:var(--accent);font-weight:600}
 
-/* La Marmotte unter dem Bild — mit klarem Abstand */
+/* Zitat-Block unter dem Bild — mit klarem Abstand */
 .cv-quote{
   margin-top:1.5rem;padding:1.4rem 1.4rem 1.2rem;
   background:var(--paper-soft);
@@ -871,7 +888,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
           </div>
           <div class="ability-row-body">
             <h4>OMF, OMSA, OPPS, OSTA</h4>
-            <p>SAPs neueste Industry Solutions — reichlich Implementierungs­erfahrung aus dem produktiven Einsatz bei 11teamsports.</p>
+            <p>SAPs neueste Industry Solutions — reichlich Implementierungs­erfahrung aus dem produktiven Einsatz bei 11teamsports — dazu über Jahre gewachsene, enge Kontakte zu den Produktverantwortlichen bei SAP.</p>
             <div class="tags"><span>OMF</span><span>OMSA</span><span>OPPS</span><span>OSTA</span></div>
           </div>
         </article>
@@ -879,12 +896,12 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
         <article class="ability-row reveal">
           <div class="ability-row-meta">
             <span class="ability-row-num">02</span>
-            <span class="ability-row-cat">BTP &amp; Eventing</span>
+            <span class="ability-row-cat">Eventbasierte Architektur</span>
           </div>
           <div class="ability-row-body">
-            <h4>Integration Suite &amp; Event Mesh</h4>
-            <p>SAP Integration Suite, Eventing Tools und BTP-Entwicklung — bei 11teamsports produktiv im Einsatz.</p>
-            <div class="tags"><span>Integration Suite</span><span>Event Mesh</span><span>BTP Dev</span></div>
+            <h4>Integration Suite, Event Mesh &amp; Event Hub</h4>
+            <p>Tiefgreifendes Wissen über eventbasierte Architektur in der SAP-Welt — umgesetzt mit Integration Suite sowie Event Mesh / Event Hub.</p>
+            <div class="tags"><span>Integration Suite</span><span>Event Mesh</span><span>Event Hub</span><span>BTP</span></div>
           </div>
         </article>
 
@@ -895,7 +912,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
           </div>
           <div class="ability-row-body">
             <h4>Vertieft in SD, POS, Schnittstellen &amp; Stammdaten</h4>
-            <p>S/4HANA Retail-Erfahrung überwiegend in den Bereichen SD und POS. Starker Fokus auf Stammdaten und Schnittstellen von und aus S/4.</p>
+            <p>S/4HANA Retail-Erfahrung als Berater, überwiegend in den Bereichen SD und POS. Starker Fokus auf Stammdaten und Schnittstellen von und aus S/4.</p>
             <div class="tags"><span>S/4HANA</span><span>SD</span><span>POS</span><span>Stammdaten</span><span>Schnittstellen</span></div>
           </div>
         </article>
@@ -927,7 +944,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
           </div>
           <div class="ability-row-body">
             <h4>Locker und menschennah</h4>
-            <p>Die besten Projekte entstehen, wenn Leute gerne miteinander arbeiten. Ich rede Klartext, lache gern und wahre eine gewisse Lockerheit — Probleme lösen geht nur zusammen.</p>
+            <p>Die besten Ergebnisse entstehen, wenn Leute gerne miteinander arbeiten. Ich bringe immer Lockerheit und gute Stimmung ins Team — Probleme löst man nur gemeinsam.</p>
           </div>
         </article>
 
@@ -949,7 +966,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
           </div>
           <div class="ability-row-body">
             <h4>So effizient wie möglich</h4>
-            <p>Kleine, schlagkräftige Teams. Kurze Wege, jeder involviert. Routine-Aufgaben werden konsequent an KI ausgelagert.</p>
+            <p>Ich liebe kleine, schlagkräftige Teams, in denen jeder involviert ist. Routine-Aufgaben lagere ich konsequent an die KI aus — damit wir uns voll auf das Wesentliche konzentrieren können.</p>
           </div>
         </article>
 
@@ -959,8 +976,8 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
             <span class="ability-row-cat">Perspektive</span>
           </div>
           <div class="ability-row-body">
-            <h4>End-to-End denken</h4>
-            <p>Vom Stammdatum über die Bestellung bis zur Retoure — nur wer das große Bild sieht, baut Architektur, die später nicht reißt.</p>
+            <h4>E2E denken über Systemgrenzen hinweg</h4>
+            <p>Ich will den End-to-End besten Prozess designen — und denke mich dafür in jedes Tool ein, egal ob SAP oder nicht. Ein „Kein SAP-Tool, also nicht mein Thema" gibt es bei mir nicht.</p>
           </div>
         </article>
 
@@ -988,16 +1005,11 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
           11teamsports kam aus einem stark angepassten ERP-System, das über Jahre hinweg sämtliche Geschäftslogik abbildete. Die hohe Customizing-Rate machte Updates praktisch unmöglich — und viel Wissen existierte nur in den Köpfen einzelner Mitarbeiter.
         </p>
         <p class="case-body">
-          Die strategische Entscheidung: ein vollständiger Wechsel auf SAP — mit den neuesten Produkten im Backend und Frontend. Um die Einführung von Order Management Foundation, OMSA, Integration Suite und S/4HANA strukturiert und ohne große Komplikationen umzusetzen, haben wir den <strong>Capabilities-Ansatz</strong> gewählt: zuerst das neue Frontend an die alte Backend-Welt angebunden, dann schrittweise die alte durch die neue Welt ersetzt.
+          Die strategische Entscheidung: ein vollständiger Wechsel auf SAP — mit den neuesten Produkten im Backend und Frontend. Um die Einführung von Order Management Foundation, OMSA, Integration Suite und S/4HANA strukturiert und ohne große Komplikationen umzusetzen, haben wir zuerst das neue Frontend an die alte Backend-Welt angebunden und diese dann Schritt für Schritt durch die neue ersetzt. Das Ergebnis: ein angenehmer, gut beherrschbarer Übergang.
         </p>
         <p class="case-body">
-          Gleichzeitig wurde Logik konsequent aus dem ERP herausgelöst und in die Cloud-Systeme verlagert — für ein schlankes, wartbares Clean-Core-Setup. Heute dient die Architektur als SAP-Referenz, vorgestellt auf der DSAG-Jahrestagung und der ESUG Onsite.
+          Gleichzeitig wurde Logik konsequent aus dem ERP herausgelöst und in die Cloud-Systeme verlagert — für ein schlankes, wartbares Clean-Core-Setup. Heute dienen sowohl die Herangehensweise als auch die Architektur als SAP-Referenz, vorgestellt auf der DSAG-Jahrestagung und der ESUG Onsite.
         </p>
-
-        <a href="onepager.pdf" target="_blank" rel="noopener" class="case-download">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          One-Pager herunterladen
-        </a>
 
       </div>
     </div>
@@ -1005,17 +1017,46 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
     <!-- Tech Stack volle Breite unter dem Grid -->
     <div class="case-stack">
       <h4>Tech Stack</h4>
-      <ul>
-        <li><b>OMF</b><span>Order Management Foundation</span></li>
-        <li><b>OMSA</b><span>Sourcing &amp; Availability</span></li>
-        <li><b>S/4HANA PCE</b><span>Clean-Core ERP</span></li>
-        <li><b>Integration Suite</b><span>Connector / Middleware</span></li>
-        <li><b>EventHub / EventMesh</b><span>Event Broker</span></li>
-        <li><b>Commerce Cloud</b><span>Customer Experience</span></li>
-        <li><b>Adyen / PayPal</b><span>Payment Service Provider</span></li>
-        <li><b>ParcelLab</b><span>Versanddienstleister-Integration</span></li>
-        <li><b>Emarsys</b><span>Order- &amp; Invoice-Mails</span></li>
-      </ul>
+
+      <div class="stack-layer">
+        <div class="stack-layer-label">Core / ERP</div>
+        <div class="stack-layer-items">
+          <span class="stack-pill"><b>S/4HANA PCE</b><span>Clean-Core ERP</span></span>
+        </div>
+      </div>
+
+      <div class="stack-layer">
+        <div class="stack-layer-label">Order Management</div>
+        <div class="stack-layer-items">
+          <span class="stack-pill"><b>OMF</b><span>Order Management Foundation</span></span>
+          <span class="stack-pill"><b>OMSA</b><span>Sourcing &amp; Availability</span></span>
+        </div>
+      </div>
+
+      <div class="stack-layer">
+        <div class="stack-layer-label">Integration &amp; Eventing</div>
+        <div class="stack-layer-items">
+          <span class="stack-pill"><b>Integration Suite</b><span>Connector / Middleware</span></span>
+          <span class="stack-pill"><b>EventHub / EventMesh</b><span>Event Broker</span></span>
+        </div>
+      </div>
+
+      <div class="stack-layer">
+        <div class="stack-layer-label">Experience</div>
+        <div class="stack-layer-items">
+          <span class="stack-pill"><b>Commerce Cloud</b><span>Customer Experience</span></span>
+          <span class="stack-pill"><b>Emarsys</b><span>Order- &amp; Invoice-Mails</span></span>
+        </div>
+      </div>
+
+      <div class="stack-layer">
+        <div class="stack-layer-label">Payment &amp; Fulfillment</div>
+        <div class="stack-layer-items">
+          <span class="stack-pill"><b>Adyen / PayPal</b><span>Payment Service Provider</span></span>
+          <span class="stack-pill"><b>ParcelLab</b><span>Versanddienstleister-Integration</span></span>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -1131,11 +1172,11 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
         <div class="cv-timeline-list">
           <div class="cv-entry reveal">
             <div class="cv-entry-head">
-              <span class="cv-year">2023</span>
+              <span class="cv-year">2026</span>
             </div>
-            <div class="cv-role">La Marmotte · Rennrad</div>
-            <div class="cv-company"><b>180 km</b> · 5 000 Höhenmeter · 10 h 30 min</div>
-            <p class="cv-desc">Leidenschaftlicher Rennradfahrer — eine der härtesten Radmarathons der Alpen erfolgreich abgeschlossen.</p>
+            <div class="cv-role">Ironman 70.3 · Neuseenman</div>
+            <div class="cv-company"><b>1,9 km</b> Schwimmen · 90 km Rad · 21,1 km Lauf</div>
+            <p class="cv-desc">Eine meiner härtesten, aber besten Erfahrungen — der abschließende Halbmarathon tat richtig weh.</p>
           </div>
         </div>
       </div>
