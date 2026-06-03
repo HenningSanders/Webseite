@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impressum — Henning Sanders</title>
+<style>
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/bricolage-grotesque-400.woff2) format('woff2')}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/bricolage-grotesque-600.woff2) format('woff2')}
+@font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/hanken-grotesk-400.woff2) format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/jetbrains-mono-400.woff2) format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/jetbrains-mono-600.woff2) format('woff2')}
+:root{
+  --bg:#0a141f;--bg-2:#0c1825;
+  --line:rgba(150,188,220,.17);--line-soft:rgba(150,188,220,.09);
+  --ink:#d4dfec;--ink-bright:#f2f7fc;--ink-mute:#708aa4;
+  --accent:#eea83c;
+  --sans:'Hanken Grotesk',-apple-system,sans-serif;
+  --display:'Bricolage Grotesque',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --maxw:720px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:1rem;line-height:1.7}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:3rem 1.5rem 2rem}
+.back{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-mute);margin-bottom:2.5rem;
+}
+.back:hover{color:var(--accent);text-decoration:none}
+h1{
+  font-family:var(--display);font-size:clamp(1.8rem,4vw,2.4rem);
+  font-weight:600;color:var(--ink-bright);margin-bottom:.3rem;letter-spacing:-.01em;
+}
+.subtitle{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;color:var(--ink-mute);text-transform:uppercase;margin-bottom:2rem}
+h2{font-family:var(--display);font-size:1.15rem;font-weight:600;color:var(--ink-bright);margin:2rem 0 .6rem}
+p{margin-bottom:.8rem}
+address{font-style:normal;margin-bottom:1.5rem;line-height:1.8}
+footer{
+  border-top:1px solid var(--line-soft);margin-top:3rem;padding:1.2rem 0;
+  font-family:var(--mono);font-size:.7rem;color:var(--ink-mute);letter-spacing:.06em;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;
+}
+footer a{color:var(--ink-mute)}
+footer a:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="index.html" class="back">← Zurück zur Startseite</a>
+
+  <h1>Impressum</h1>
+  <div class="subtitle">nach §5 Telemediengesetz</div>
+
+  <address>
+    Henning Sanders<br>
+    Wittenberger Straße 32<br>
+    04129 Leipzig
+  </address>
+
+  <h2>Kontakt</h2>
+  <p>E-Mail: <a href="mailto:info@sandersconsulting.de">info@sandersconsulting.de</a></p>
+  <p>LinkedIn: <a href="https://www.linkedin.com/in/henning-sanders-522b1a120/" target="_blank" rel="noopener">linkedin.com/in/henning-sanders</a></p>
+
+  <h2>Haftung für Inhalte</h2>
+  <p>Die Inhalte dieser Seite wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden.</p>
+
+  <h2>Haftung für Links</h2>
+  <p>Diese Webseite enthält Links zu externen Webseiten Dritter, auf deren Inhalte kein Einfluss besteht. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter verantwortlich.</p>
+
+  <footer>
+    <span>© 2026 Henning Sanders · Leipzig</span>
+    <span><a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></span>
+  </footer>
+
+</div>
+</body>
+</html>
