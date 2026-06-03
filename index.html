@@ -1,835 +1,475 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Henning Sanders — SAP Retail Architekt</title>
-<meta name="description" content="Solution Architect mit Fokus auf E2E Order-to-Cash und SAP-Cloud-Architekturen. Referenzarchitektur bei 11teamsports.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Henning Sanders — SAP Retail Architect</title>
+<meta name="description" content="Solution Architect mit Fokus auf E2E Order-to-Cash und eventbasierte SAP-Cloud-Architekturen. Referenzarchitektur bei einem führenden Sportretailer.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* Palette: nur 3 Farben — Papier, Tinte, Akzent */
-  --paper:#f3efe7;
-  --paper-soft:#eae5da;
-  --ink:#1a1a1a;
-  --ink-soft:#3a3a3a;
-  --ink-mute:#7a7468;
-  --line:#cfc8b8;
-  --line-soft:#dcd5c3;
-  --accent:#c7461c;
-
-  /* Nur 2 Schriftarten */
-  --serif:'Fraunces', ui-serif, Georgia, serif;
-  --sans:'Inter Tight', ui-sans-serif, system-ui, sans-serif;
-
+  --bg:#0a141f;
+  --bg-2:#0c1825;
+  --panel:#0f1e2e;
+  --panel-2:#102337;
+  --grid-fine:rgba(126,170,212,.04);
+  --grid-major:rgba(126,170,212,.075);
+  --line:rgba(150,188,220,.17);
+  --line-soft:rgba(150,188,220,.09);
+  --ink:#d4dfec;
+  --ink-bright:#f2f7fc;
+  --ink-mute:#708aa4;
+  --ink-faint:#47596e;
+  --accent:#eea83c;
+  --accent-bright:#f8bc55;
+  --accent-soft:rgba(238,168,60,.13);
+  --blue:#76b2e2;
+  --blue-soft:rgba(118,178,226,.12);
+  --sans:'Hanken Grotesk',-apple-system,sans-serif;
+  --display:'Bricolage Grotesque',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
   --maxw:1180px;
-  --gutter:clamp(1.1rem, 3.5vw, 2.6rem);
 }
 
-*,*::before,*::after{box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0;
-  background:var(--paper);
-  color:var(--ink);
   font-family:var(--sans);
-  font-size:15.5px;
-  line-height:1.55;
+  color:var(--ink);
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px);
+  background-size:28px 28px,28px 28px,140px 140px,140px 140px;
+  background-position:center top;
+  line-height:1.6;
   -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+  position:relative;
 }
-::selection{background:var(--ink);color:var(--paper)}
-a{color:inherit;text-decoration:none}
+/* atmosphärischer Glow */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(900px 520px at 78% -8%, rgba(238,168,60,.10), transparent 60%),
+    radial-gradient(1100px 700px at 8% 18%, rgba(118,178,226,.10), transparent 55%);
+}
+::selection{background:var(--accent);color:#0a141f}
 
-/* ------- NAV ------- */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:50;
-  padding:.7rem var(--gutter);
-  background:rgba(243,239,231,.92);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  border-bottom:1px solid transparent;
-  transition:border-color .3s ease;
+a{color:inherit;text-decoration:none}
+em{font-style:normal;color:var(--accent)}
+
+/* ---------- Mono kicker / Labels ---------- */
+.kicker{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--accent);
+  display:inline-flex;align-items:center;gap:.6rem;
 }
-nav.scrolled{border-bottom-color:var(--line)}
+.kicker::before{
+  content:"";width:26px;height:1px;background:var(--accent);display:inline-block;
+}
+.eyebrow{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:1rem;
+}
+
+/* ---------- Tech frame (Eck-Markierungen) ---------- */
+.tech-frame{position:relative;border:1px solid var(--line)}
+.tech-frame::before,.tech-frame::after{
+  content:"";position:absolute;width:9px;height:9px;border:1.5px solid var(--accent);
+}
+.tech-frame::before{top:-1px;left:-1px;border-right:none;border-bottom:none}
+.tech-frame::after{bottom:-1px;right:-1px;border-left:none;border-top:none}
+
+/* ---------- NAV ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  border-bottom:1px solid transparent;transition:.3s;
+}
+nav.scrolled{
+  background:rgba(10,20,31,.82);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-soft);
+}
 .nav-inner{
-  max-width:var(--maxw);margin:0 auto;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:1rem;
+  max-width:var(--maxw);margin:0 auto;padding:1.1rem 2rem;
+  display:flex;justify-content:space-between;align-items:center;
 }
 .nav-brand{
-  display:flex;align-items:center;gap:.6rem;
-  font-family:var(--serif);font-weight:500;letter-spacing:-.01em;font-size:1rem;
+  font-family:var(--mono);font-size:.82rem;letter-spacing:.04em;
+  color:var(--ink-bright);font-weight:500;display:flex;align-items:center;gap:.55rem;
 }
-.nav-brand img{width:30px;height:30px;border-radius:50%;object-fit:cover}
-.nav-links{
-  display:flex;gap:1.6rem;
-  font-size:.78rem;letter-spacing:.04em;
-  font-weight:500;color:var(--ink-soft);
+.nav-brand::before{
+  content:"";width:8px;height:8px;background:var(--accent);
+  box-shadow:0 0 10px var(--accent);border-radius:1px;
 }
-.nav-links a{position:relative;transition:color .2s}
+.nav-links{display:flex;gap:2rem}
+.nav-links a{
+  font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;
+  color:var(--ink-mute);text-transform:uppercase;transition:.2s;position:relative;
+}
 .nav-links a:hover{color:var(--accent)}
-.nav-links a::after{
-  content:"";position:absolute;left:0;right:0;bottom:-3px;height:1px;
-  background:var(--accent);transform:scaleX(0);transform-origin:left;
-  transition:transform .25s ease;
-}
-.nav-links a:hover::after{transform:scaleX(1)}
-@media (max-width:680px){.nav-links{display:none}}
+@media(max-width:720px){.nav-links{display:none}}
 
-/* ------- HERO ------- */
+/* ---------- Layout helpers ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 2rem}
+section,.block{max-width:var(--maxw);margin:0 auto;padding:0 2rem}
+#about,#case,#cv,#contact{scroll-margin-top:78px}
+
+/* ---------- HERO ---------- */
 .hero{
-  padding:6rem var(--gutter) 2rem;
-  max-width:var(--maxw);margin:0 auto;
-  position:relative;
-  display:grid;
-  grid-template-columns:1.2fr 1fr;
-  gap:clamp(2rem, 5vw, 4rem);
-  align-items:center;
+  padding-top:10rem;padding-bottom:6rem;
+  display:grid;grid-template-columns:1fr .92fr;gap:3.5rem;align-items:center;
 }
-@media (max-width:880px){.hero{grid-template-columns:1fr;gap:2.5rem;padding:5rem var(--gutter) 1.5rem}}
-
-.hero-image{
-  position:relative;
-  align-self:stretch;
-  display:flex;align-items:center;
+.hero-tags{display:flex;flex-wrap:wrap;gap:.55rem;margin-bottom:2rem}
+.hero-tag{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;
+  color:var(--ink);background:var(--blue-soft);
+  border:1px solid var(--line-soft);
+  padding:.34rem .7rem;display:inline-flex;align-items:center;gap:.5rem;
 }
+.hero-tag .dot{width:6px;height:6px;background:var(--accent);border-radius:50%;flex-shrink:0}
+.hero h1{
+  font-family:var(--display);font-weight:600;
+  font-size:clamp(2.1rem,4.3vw,3.5rem);line-height:1.04;
+  letter-spacing:-.02em;color:var(--ink-bright);
+}
+.hero-intro{
+  margin-top:1.7rem;max-width:30em;font-size:1.06rem;color:var(--ink);
+  line-height:1.65;
+}
+.hero-intro strong{color:var(--accent-bright);font-weight:600}
+.hero-coord{
+  margin-top:2.2rem;font-family:var(--mono);font-size:.7rem;
+  letter-spacing:.14em;color:var(--ink-faint);text-transform:uppercase;
+}
+.hero-image{position:relative}
 .hero-image img{
-  width:100%;
-  aspect-ratio:4/5;
-  object-fit:cover;
-  object-position:center 25%;
-  display:block;
-  filter:none;
+  width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center 18%;
+  display:block;filter:grayscale(.25) contrast(1.04);
 }
-.hero-image:hover img{filter:none}
-.hero-image::before{
-  content:"";position:absolute;inset:-12px -12px auto auto;
-  width:60px;height:60px;
-  border-top:1px solid var(--accent);border-right:1px solid var(--accent);
-  pointer-events:none;
-  z-index:1;
+.hero-image .frame-tag{
+  position:absolute;top:-1px;left:-1px;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;
+  background:var(--accent);color:#0a141f;padding:.25rem .55rem;font-weight:600;
 }
 .hero-image .caption{
-  position:absolute;bottom:1rem;left:1rem;
-  background:var(--paper);color:var(--ink);
-  padding:.4rem .75rem;
-  font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;font-weight:500;
-  border-left:2px solid var(--accent);
+  position:absolute;bottom:-1px;right:-1px;
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;
+  color:var(--ink-bright);background:rgba(10,20,31,.85);
+  border-top:1px solid var(--line);border-left:1px solid var(--line);
+  padding:.4rem .7rem;
 }
-@media (max-width:880px){
-  .hero-image img{aspect-ratio:5/4}
-}
-
-.hero-tags{
-  display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2rem;
-}
-.hero-tag{
-  display:inline-flex;align-items:center;gap:.45rem;
-  font-family:var(--sans);font-size:.72rem;letter-spacing:.08em;
-  font-weight:500;
-  color:var(--ink);
-  padding:.35rem .8rem;
-  border:1px solid var(--line);
-  background:transparent;
-  border-radius:99px;
-  text-transform:uppercase;
-}
-.hero-tag .dot{
-  display:inline-block;width:5px;height:5px;border-radius:50%;
-  background:var(--accent);
+@media(max-width:860px){
+  .hero{grid-template-columns:1fr;gap:2.5rem;padding-top:8rem}
+  .hero-image{max-width:380px}
 }
 
-.hero h1{
-  font-family:var(--serif);font-weight:400;
-  font-size:clamp(2.4rem, 5.4vw, 4.4rem);
-  line-height:.98;letter-spacing:-.025em;
-  margin:0 0 1.2rem;
-  font-variation-settings:"opsz" 144, "SOFT" 30;
-  max-width:14ch;
-}
-.hero h1 em{font-style:italic;font-weight:300;color:var(--accent)}
-
-.hero-intro{
-  font-size:1.05rem;color:var(--ink-soft);
-  max-width:54ch;line-height:1.65;margin:0 0 2rem;
-}
-.hero-intro strong{font-weight:500;color:var(--ink)}
-.hero-intro .wave{display:inline-block;animation:wave 2.5s ease-in-out infinite;transform-origin:70% 70%}
-@keyframes wave{
-  0%,60%,100%{transform:rotate(0deg)}
-  10%{transform:rotate(14deg)}
-  20%{transform:rotate(-8deg)}
-  30%{transform:rotate(14deg)}
-  40%{transform:rotate(-4deg)}
-  50%{transform:rotate(10deg)}
+/* ---------- Section header ---------- */
+.sec-head{padding-top:5.5rem;margin-bottom:2.8rem}
+.section-h{
+  font-family:var(--display);font-weight:600;
+  font-size:clamp(1.9rem,3.6vw,2.9rem);line-height:1.08;
+  letter-spacing:-.015em;color:var(--ink-bright);margin-top:.9rem;
 }
 
-.hero-ctas{display:flex;gap:1.4rem;align-items:center;flex-wrap:wrap}
-.hero-cta{
-  display:inline-flex;align-items:center;gap:.6rem;
-  font-size:.85rem;letter-spacing:.02em;font-weight:500;
-  color:var(--ink);padding:.4rem 0;border-bottom:1px solid var(--ink);
-  transition:gap .25s ease, color .25s ease, border-color .25s ease;
-}
-.hero-cta:hover{gap:1.1rem;color:var(--accent);border-bottom-color:var(--accent)}
-.hero-cta::after{content:"→";display:inline-block;transition:transform .25s ease}
-.hero-cta:hover::after{transform:translateX(3px)}
-.hero-cta.muted{color:var(--ink-mute);border-color:var(--line)}
-
-/* ------- SECTION BASE ------- */
-section{
-  padding:5rem var(--gutter);
-  max-width:var(--maxw);margin:0 auto;
-  position:relative;
-}
-@media (max-width:680px){section{padding:3.5rem var(--gutter)}}
-
-.eyebrow{
-  display:inline-flex;align-items:center;gap:.7rem;
-  font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
-  font-weight:500;
-  color:var(--ink-mute);margin-bottom:1.2rem;
-}
-.eyebrow::before{content:"";width:22px;height:1px;background:var(--accent)}
-
-h2.section-h{
-  font-family:var(--serif);font-weight:400;
-  font-size:clamp(1.9rem, 4vw, 3rem);line-height:1.05;letter-spacing:-.02em;
-  margin:0 0 2.5rem;max-width:22ch;
-  font-variation-settings:"opsz" 144, "SOFT" 30;
-}
-h2.section-h em{font-style:italic;color:var(--accent);font-weight:300}
-
-/* ------- TAB SWITCHER für Wie/Was ------- */
+/* ---------- ABOUT / Tabs ---------- */
+#about{padding-top:5.5rem}
 .ability-tabs{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:clamp(1.5rem,4vw,3.5rem);
-  margin-bottom:3rem;
-  padding-bottom:1.2rem;
-  border-bottom:1px solid var(--line);
-  align-items:end;
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  border:1px solid var(--line);margin-bottom:0;
 }
-@media (max-width:640px){
-  .ability-tabs{grid-template-columns:1fr;gap:1rem;padding-bottom:.8rem}
-}
-
 .ability-tab{
-  background:none;border:0;padding:1.2rem 1.5rem;cursor:pointer;
-  text-align:left;
-  display:flex;flex-direction:column;gap:.4rem;
-  font-family:var(--sans);
-  position:relative;
-  transition:opacity .35s ease, background .35s ease, border-color .35s ease;
-  opacity:.45;
-  border:1px solid var(--line);
-  border-radius:2px;
+  background:transparent;border:none;cursor:pointer;text-align:left;
+  padding:1.5rem 1.6rem;color:var(--ink-mute);
+  border-right:1px solid var(--line);transition:.25s;position:relative;
+  display:flex;flex-direction:column;gap:.35rem;
 }
-.ability-tab:hover{opacity:.75;background:rgba(199,70,28,.03)}
-.ability-tab.active{opacity:1;cursor:default;background:rgba(199,70,28,.05);border-color:var(--accent)}
+.ability-tab:last-child{border-right:none}
+.ability-tab:hover{background:var(--bg-2)}
+.ability-tab.active{background:var(--panel);color:var(--ink)}
+.ability-tab.active::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent);
+}
+.ability-tab-num{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;color:var(--accent)}
+.ability-tab-label{font-family:var(--display);font-size:1.45rem;font-weight:600;color:var(--ink-bright);line-height:1.1}
+.ability-tab.active .ability-tab-label{color:var(--ink-bright)}
+.ability-tab-sub{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:var(--ink-faint);text-transform:uppercase}
 
-.ability-tab-num{
-  font-family:var(--serif);font-style:italic;font-weight:400;
-  font-size:.85rem;color:var(--accent);
-  letter-spacing:.02em;
-}
-.ability-tab-label{
-  font-family:var(--serif);font-weight:400;
-  font-size:clamp(1.6rem,3.4vw,2.6rem);
-  line-height:1.05;letter-spacing:-.02em;
-  color:var(--ink);
-  font-variation-settings:"opsz" 144, "SOFT" 30;
-}
-.ability-tab.active .ability-tab-label em{
-  font-style:italic;color:var(--accent);font-weight:300;
-}
-.ability-tab-sub{
-  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
-  font-weight:600;color:var(--ink-mute);
-  margin-top:.2rem;
-}
-
-/* Indicator-Line unter dem aktiven Tab */
-.ability-tab::after{
-  content:"";
-  position:absolute;
-  left:0;right:0;bottom:-1.2rem;
-  height:2px;background:var(--accent);
-  transform:scaleX(0);transform-origin:left;
-  transition:transform .4s cubic-bezier(.65,0,.35,1);
-}
-.ability-tab.active::after{transform:scaleX(1)}
-@media (max-width:640px){
-  .ability-tab::after{bottom:-.8rem}
-}
-
-/* Panels: nur einer sichtbar */
-.ability-panel{
-  display:none;
-  animation:panelFade .5s ease;
-}
-.ability-panel.active{display:block}
-
-@keyframes panelFade{
-  from{opacity:0;transform:translateY(8px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-/* Im Panel: Section-Head ausblenden weil schon im Tab */
-.ability-panel .ability-section-head,
-.ability-panel .skill-stripes-head{display:none}
-
-/* ------- INDEX LAYOUT — eine Sprache für beide Tabs ------- */
-.ability-block{margin-bottom:0}
-
-.ability-index{
-  border-top:1px solid var(--line);
-}
+.ability-panel{display:none;border:1px solid var(--line);border-top:none;background:var(--panel)}
+.ability-panel.active{display:block;animation:fadeUp .5s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 .ability-row{
-  display:grid;
-  grid-template-columns:minmax(160px, 1fr) 3fr;
-  gap:clamp(1.5rem, 5vw, 4rem);
-  padding:2rem 0;
-  border-bottom:1px solid var(--line);
-  position:relative;
-  opacity:0;
-  transform:translateY(12px);
-  transition:opacity .6s ease, transform .6s ease, padding .4s ease, background-color .35s ease;
-  cursor:default;
+  display:grid;grid-template-columns:230px 1fr;gap:2rem;
+  padding:1.9rem 2rem;border-bottom:1px solid var(--line-soft);
+  opacity:0;transform:translateY(14px);transition:.6s;
 }
-.ability-row.in{opacity:1;transform:translateY(0)}
-
-/* Akzent-Linie links die beim Hover wandert */
-.ability-row::before{
-  content:"";
-  position:absolute;left:0;top:50%;
-  width:0;height:1px;
-  background:var(--accent);
-  transition:width .45s cubic-bezier(.65,0,.35,1);
-  transform:translateY(-50%);
+.ability-row.in{opacity:1;transform:none}
+.ability-row:last-child{border-bottom:none}
+.ability-row-meta{display:flex;flex-direction:column;gap:.5rem}
+.ability-row-num{font-family:var(--mono);font-size:1.6rem;color:var(--accent);font-weight:500;line-height:1}
+.ability-row-cat{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+.ability-row-body h4{font-family:var(--display);font-size:1.18rem;font-weight:600;color:var(--ink-bright);margin-bottom:.55rem;letter-spacing:-.01em}
+.ability-row-body p{font-size:.95rem;color:var(--ink);max-width:46em}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1rem}
+.tags span{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.02em;
+  color:var(--ink-mute);border:1px solid var(--line-soft);
+  padding:.22rem .55rem;background:var(--bg-2);
 }
-.ability-row:hover{padding-left:1.5rem}
-.ability-row:hover::before{width:1rem}
-.ability-row:hover .ability-row-num{color:var(--accent)}
-
-@media (max-width:680px){
-  .ability-row{grid-template-columns:1fr;gap:.5rem;padding:1.5rem 0}
-  .ability-row:hover{padding-left:0}
-  .ability-row:hover::before{width:0}
+@media(max-width:680px){
+  .ability-row{grid-template-columns:1fr;gap:.8rem;padding:1.5rem 1.3rem}
+  .ability-row-meta{flex-direction:row;align-items:baseline;gap:.9rem}
+  .ability-tab{padding:1.1rem}
+  .ability-tab-label{font-size:1.15rem}
 }
 
-/* Linke Spalte: Nummer + Kategorie */
-.ability-row-meta{
-  display:flex;flex-direction:column;gap:.4rem;
-}
-.ability-row-num{
-  font-family:var(--serif);font-weight:300;font-style:italic;
-  font-size:2.4rem;line-height:1;
-  color:var(--ink);
-  letter-spacing:-.02em;
-  font-variation-settings:"opsz" 144, "SOFT" 30;
-  transition:color .3s ease;
-}
-.ability-row-cat{
-  font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--ink-mute);font-weight:600;
-  margin-top:.3rem;
-}
-
-/* Rechte Spalte: Titel + Beschreibung */
-.ability-row-body h4{
-  font-family:var(--serif);font-weight:500;
-  font-size:1.5rem;letter-spacing:-.015em;line-height:1.2;
-  margin:0 0 .6rem;
-  color:var(--ink);
-}
-.ability-row-body p{
-  font-size:.95rem;line-height:1.6;color:var(--ink-soft);
-  margin:0;max-width:60ch;
-}
-.ability-row-body .tags{
-  display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.8rem;
-}
-.ability-row-body .tags span{
-  font-size:.68rem;letter-spacing:.04em;
-  color:var(--ink-mute);padding:.2rem .6rem;
-  border:1px solid var(--line);border-radius:99px;
-  background:var(--paper-soft);
-  transition:color .25s, border-color .25s, background .25s;
-}
-.ability-row:hover .ability-row-body .tags span{
-  color:var(--accent);
-  border-color:rgba(199,70,28,.35);
-  background:rgba(199,70,28,.05);
-}
-
-/* ------- CASE / 11teamsports ------- */
-.case{
-  background:#1a1a1a;
-  color:var(--paper);
-  padding:5rem var(--gutter);
-  position:relative;overflow:hidden;
-  margin-top:2rem;
-}
-.case::before{
-  content:"";position:absolute;inset:0;
-  background-image:radial-gradient(circle at 80% 20%, rgba(199,70,28,.15), transparent 50%);
-  pointer-events:none;
-}
-.case-inner{max-width:var(--maxw);margin:0 auto;position:relative}
-.case .eyebrow{color:#a8a094}
-.case .eyebrow::before{background:var(--accent)}
-
+/* ---------- CASE ---------- */
+.case{padding-top:5.5rem}
 .case-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:clamp(2rem,5vw,4rem);align-items:start;
+  display:grid;grid-template-columns:.8fr 1.2fr;gap:3rem;align-items:start;
 }
-@media (max-width:880px){.case-grid{grid-template-columns:1fr}}
-
-/* Linke Spalte: Bild über volle Höhe */
-.case-image-col{
-  position:relative;
-  align-self:stretch;
-  display:flex;flex-direction:column;
-}
+.case-image-col{position:relative}
 .case-img-full{
-  width:100%;
-  aspect-ratio:3/4;
-  object-fit:cover;
-  object-position:center;
-  display:block;
-  filter:none;
+  width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center 20%;
+  display:block;filter:grayscale(.3) contrast(1.05);
 }
-.case-image-col:hover .case-img-full{filter:none}
-.case-image-col::before{
-  content:"";position:absolute;inset:-12px auto auto -12px;
-  width:60px;height:60px;
-  border-top:1px solid var(--accent);border-left:1px solid var(--accent);
-  pointer-events:none;
-  z-index:1;
+.case-image-col .frame-tag{
+  position:absolute;top:-1px;left:-1px;font-family:var(--mono);font-size:.62rem;
+  letter-spacing:.12em;background:var(--blue);color:#0a141f;padding:.25rem .55rem;font-weight:600;
 }
-.case-img-meta{
-  display:flex;justify-content:space-between;
-  margin-top:.8rem;
-  font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
-  color:#a8a094;font-weight:500;
+.case-h{
+  font-family:var(--display);font-weight:600;font-size:clamp(1.7rem,3.2vw,2.5rem);
+  line-height:1.1;letter-spacing:-.015em;color:var(--ink-bright);margin:.9rem 0 1.4rem;
 }
-.case-img-meta span:last-child{color:var(--accent)}
+.case-body{font-size:1rem;color:var(--ink);margin-bottom:1rem;max-width:46em;line-height:1.7}
+.case-intro{margin-bottom:.5rem}
+.case-intro .case-body strong{color:var(--ink-bright)}
+.case-body strong{color:var(--ink-bright);font-weight:600}
+@media(max-width:780px){.case-grid{grid-template-columns:1fr;gap:2rem}.case-image-col{max-width:340px}}
 
-/* Rechte Spalte */
-.case-text-col{padding-top:.5rem}
+/* ---------- Architecture figure (interaktiv) ---------- */
+.figure{
+  margin-top:3rem;border:1px solid var(--line);background:var(--bg-2);position:relative;
+  padding:1.4rem 1.4rem 1rem;
+}
+.figure-head{
+  display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-mute);margin-bottom:.7rem;
+}
+.figure-head b{color:var(--accent);font-weight:500}
+.figure-hint{text-transform:none;letter-spacing:.04em;color:var(--ink-faint)}
+.figure-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.schematic{width:100%;min-width:900px;height:auto;display:block}
+/* nodes */
+.n-sap rect{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.6}
+.n-ext rect{fill:var(--blue-soft);stroke:var(--blue);stroke-width:1.6}
+.n-label{font-family:var(--mono);font-size:17px;fill:var(--ink-bright);letter-spacing:.01em}
+.n-label.big{font-size:22px;font-weight:500}
+/* edges */
+.edge{cursor:pointer}
+.edge .hit{stroke:transparent;stroke-width:24;fill:none}
+.edge .vis{stroke:rgba(176,205,232,.78);stroke-width:1.8;fill:none;transition:stroke .15s}
+.edge .ae{marker-end:url(#arr)}
+.edge .as{marker-start:url(#arr)}
+.edge:hover .vis{stroke:#cfe0f0}
+.edge.on .vis{stroke:var(--accent);stroke-width:2.6}
+.edge.on .ae{marker-end:url(#arrA)}
+.edge.on .as{marker-start:url(#arrA)}
+.elabel{
+  font-family:var(--mono);font-size:15px;fill:#bcccdc;letter-spacing:.01em;
+  stroke:var(--bg-2);stroke-width:4px;paint-order:stroke;transition:fill .15s;
+}
+.edge:hover .elabel{fill:var(--ink-bright)}
+.edge.on .elabel{fill:var(--accent)}
+.cross{stroke:var(--ink-faint);stroke-width:1;fill:none}
+.leg-label{font-family:var(--mono);font-size:14px;fill:var(--ink);letter-spacing:.03em}
+/* detail tooltip */
+.dia-tip{
+  position:absolute;width:280px;max-width:84vw;z-index:6;display:none;
+  background:rgba(13,27,42,.97);border:1px solid var(--accent);
+  box-shadow:0 12px 34px rgba(0,0,0,.5);padding:.85rem .95rem;
+}
+.dia-tip.show{display:block}
+.dia-tip-head{display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem;margin-bottom:.5rem}
+.dia-tip-title{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.dia-tip-close{background:none;border:none;color:var(--ink-mute);cursor:pointer;font-size:1.15rem;line-height:1;padding:0}
+.dia-tip-close:hover{color:var(--ink-bright)}
+.dia-tip p{margin:0;font-size:.86rem;line-height:1.5;color:var(--ink)}
 
-h2.case-h{
-  font-family:var(--serif);font-weight:300;
-  font-size:clamp(2rem, 4vw, 3.2rem);line-height:1;letter-spacing:-.025em;
-  margin:0 0 1.5rem;color:var(--paper);
-  font-variation-settings:"opsz" 144, "SOFT" 30;
+/* prominentes "produktiv im Einsatz"-Badge + Caption */
+.fig-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);background:var(--accent-soft);
+  border:1px solid var(--accent);padding:.32rem .7rem;font-weight:600;
 }
-h2.case-h em{font-style:italic;color:var(--accent);font-weight:300}
+.fig-badge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 9px var(--accent);animation:pulse 1.8s infinite}
+.figure-foot{
+  margin-top:.9rem;padding-top:.8rem;border-top:1px solid var(--line-soft);
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;color:var(--ink-mute);
+}
+.figure-foot b{color:var(--ink-bright);font-weight:500}
 
-.case-body{
-  font-size:1rem;line-height:1.65;color:#d5cfc0;
-  max-width:56ch;margin:0 0 1.2rem;
+/* ---------- Vorteile der Architektur ---------- */
+.vorteile{margin-top:3rem}
+.vorteile-label{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1.6rem;font-weight:600;
+}
+.vorteile-grid{display:grid;grid-template-columns:.62fr 1fr;gap:2.6rem;align-items:start}
+.vorteile-photo{position:relative}
+.vorteile-photo img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center 18%;display:block;filter:grayscale(.3) contrast(1.05)}
+.vorteile-photo .frame-tag{
+  position:absolute;top:-1px;left:-1px;font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;
+  background:var(--blue);color:#0a141f;padding:.25rem .55rem;font-weight:600;
+}
+.vorteile-list{display:flex;flex-direction:column;gap:0}
+.vorteil{
+  display:grid;grid-template-columns:auto 1fr;gap:1.2rem;
+  padding:1.3rem 0;border-bottom:1px solid var(--line-soft);
+}
+.vorteil:first-child{padding-top:0}
+.vorteil:last-child{border-bottom:none}
+.vorteil-num{font-family:var(--mono);font-size:1.5rem;color:var(--accent);font-weight:500;line-height:1}
+.vorteil h4{font-family:var(--display);font-size:1.12rem;font-weight:600;color:var(--ink-bright);margin-bottom:.45rem;letter-spacing:-.01em}
+.vorteil p{font-size:.93rem;color:var(--ink);line-height:1.6}
+@media(max-width:780px){
+  .vorteile-grid{grid-template-columns:1fr;gap:2rem}
+  .vorteile-photo{max-width:320px}
 }
 
-.case-download{
-  display:inline-flex;align-items:center;gap:.6rem;
-  margin-top:.8rem;
-  padding:.7rem 1.2rem;
-  font-size:.82rem;letter-spacing:.03em;font-weight:600;
-  color:var(--paper);
-  border:1px solid rgba(255,255,255,.2);
-  transition:background .25s, border-color .25s, gap .25s;
-}
-.case-download:hover{
-  background:rgba(199,70,28,.15);
-  border-color:var(--accent);
-  gap:.9rem;
-}
-
-.case-stack{
-  margin-top:2rem;
-  border-top:1px solid rgba(255,255,255,.1);
-  padding-top:1.5rem;
-}
+/* ---------- Tech Stack ---------- */
+.case-stack{margin-top:3rem;border:1px solid var(--line);padding:1.6rem 1.8rem}
 .case-stack h4{
-  font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--accent);margin:0 0 .8rem;font-weight:600;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1.2rem;font-weight:600;
 }
 .stack-layer{
-  display:grid;
-  grid-template-columns:150px 1fr;
-  gap:1rem;
-  padding:.7rem 0;
-  border-bottom:1px solid rgba(255,255,255,.06);
+  display:grid;grid-template-columns:160px 1fr;gap:1rem;
+  padding:.7rem 0;border-bottom:1px solid var(--line-soft);
 }
 .stack-layer:last-child{border-bottom:none;padding-bottom:0}
-.stack-layer-label{
-  font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;
-  color:#8a837a;padding-top:.35rem;
-}
-.stack-layer-items{display:flex;flex-wrap:wrap;gap:.4rem}
+.stack-layer-label{font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);padding-top:.35rem}
+.stack-layer-items{display:flex;flex-wrap:wrap;gap:.45rem}
 .stack-pill{
-  display:inline-flex;align-items:baseline;gap:.35rem;
-  font-size:.76rem;
-  padding:.3rem .65rem;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:3px;
-  background:rgba(255,255,255,.05);
-  transition:background .25s, border-color .25s;
+  display:inline-flex;align-items:baseline;gap:.4rem;font-size:.78rem;
+  padding:.32rem .68rem;border:1px solid var(--line-soft);background:var(--bg-2);
+  transition:.25s;
 }
-.stack-pill:hover{
-  background:rgba(199,70,28,.1);
-  border-color:rgba(199,70,28,.3);
-}
-.stack-pill b{color:var(--accent);font-size:.72rem;font-weight:600;letter-spacing:.02em}
-.stack-pill span{color:#a8a094;font-size:.68rem}
-@media(max-width:600px){
-  .stack-layer{grid-template-columns:1fr;gap:.45rem;padding:.6rem 0}
-  .stack-layer-label{padding-top:0}
-}
+.stack-pill:hover{background:var(--accent-soft);border-color:var(--accent)}
+.stack-pill b{font-family:var(--mono);color:var(--ink-bright);font-size:.74rem;font-weight:500}
+.stack-pill span{color:var(--ink-mute);font-size:.7rem}
+@media(max-width:600px){.stack-layer{grid-template-columns:1fr;gap:.4rem}.stack-layer-label{padding-top:0}}
 
-/* ------- DSAG Architektur ------- */
-.dsag{
-  background:rgba(234,229,218,.5);
-  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-  padding:4.5rem var(--gutter);
-}
-.dsag-inner{
-  max-width:var(--maxw);margin:0 auto;
-  display:grid;grid-template-columns:1fr 1.2fr;
-  gap:clamp(2rem,5vw,4rem);align-items:center;
-}
-@media (max-width:880px){.dsag-inner{grid-template-columns:1fr}}
-.dsag h2{
-  font-family:var(--serif);font-weight:400;
-  font-size:clamp(1.6rem, 3vw, 2.4rem);letter-spacing:-.02em;line-height:1.1;
-  margin:0 0 1rem;max-width:20ch;
-  font-variation-settings:"opsz" 144, "SOFT" 30;
-}
-.dsag h2 em{font-style:italic;color:var(--accent);font-weight:300}
-.dsag p{font-size:.98rem;line-height:1.6;color:var(--ink-soft);margin:0 0 1rem;max-width:52ch}
-.dsag-img-wrap{
-  position:relative;
-  background:#fff;
-  border:1px solid var(--line);
-  padding:1rem;
-  box-shadow:0 4px 24px rgba(26,26,26,.06);
-}
-.dsag-img{width:100%;display:block}
-.dsag-img-cap{
-  margin-top:.7rem;
-  font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--ink-mute);display:flex;justify-content:space-between;
-  font-weight:500;
-}
-
-/* ------- LEBENSLAUF — Photo links · Timeline rechts ------- */
-
-/* Meta-Daten über volle Breite oben */
+/* ---------- CV ---------- */
 .cv-meta-block{
-  display:grid;grid-template-columns:repeat(4, 1fr);
-  gap:1.4rem 2rem;
-  margin-bottom:3rem;padding-bottom:2rem;
-  border-bottom:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  border:1px solid var(--line);margin-bottom:3rem;
 }
-@media (max-width:780px){.cv-meta-block{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:540px){.cv-meta-block{grid-template-columns:1fr}}
+.cv-meta-block>div{padding:1.3rem 1.4rem;border-right:1px solid var(--line-soft)}
+.cv-meta-block>div:last-child{border-right:none}
+.cv-meta-block dt{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:.5rem}
+.cv-meta-block dd{font-size:1rem;color:var(--ink-bright);font-weight:500}
+.cv-meta-block dd small{display:block;font-size:.74rem;color:var(--ink-mute);font-weight:400;margin-top:.2rem;letter-spacing:0}
+@media(max-width:780px){.cv-meta-block{grid-template-columns:repeat(2,1fr)}.cv-meta-block>div:nth-child(2){border-right:none}}
+@media(max-width:460px){.cv-meta-block{grid-template-columns:1fr}.cv-meta-block>div{border-right:none;border-bottom:1px solid var(--line-soft)}}
 
-.cv-meta-block dt{
-  font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--ink-mute);font-weight:600;margin-bottom:.35rem;
-}
-.cv-meta-block dd{
-  margin:0;
-  font-family:var(--serif);font-size:1rem;font-weight:500;
-  letter-spacing:-.005em;color:var(--ink);line-height:1.3;
-}
-.cv-meta-block dd small{
-  display:block;font-family:var(--sans);font-weight:400;font-size:.74rem;
-  color:var(--ink-mute);margin-top:.2rem;letter-spacing:0;line-height:1.4;
-}
-
-/* Hauptbereich: Foto + Timeline */
-.cv-body{
-  display:grid;grid-template-columns:1fr 1.3fr;
-  gap:clamp(2rem,4vw,3.5rem);
-  align-items:stretch;
-}
-@media (max-width:880px){.cv-body{grid-template-columns:1fr}}
-
-/* Foto-Karte links */
-.cv-photo-col{position:relative;display:flex;flex-direction:column}
-.cv-photo-card{
-  position:relative;
-  border:1px solid var(--line);
-  padding:.7rem;
-  background:#fff;
-  box-shadow:0 4px 28px rgba(26,26,26,.05);
-}
-.cv-photo-card img{
-  width:100%;aspect-ratio:3/4;object-fit:cover;
-  object-position:center 20%;
-  filter:none;
-  display:block;
-}
-.cv-photo-card:hover img{filter:none}
-.cv-photo-card-meta{
-  display:flex;justify-content:space-between;align-items:center;
-  margin-top:.7rem;padding:0 .2rem;
-  font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ink-mute);font-weight:500;
-}
-.cv-photo-card-meta b{color:var(--accent);font-weight:600}
-
-/* Zitat-Block unter dem Bild — mit klarem Abstand */
-.cv-quote{
-  margin-top:1.5rem;padding:1.4rem 1.4rem 1.2rem;
-  background:var(--paper-soft);
-  border:1px solid var(--line);
-  position:relative;
-}
-.cv-quote::before{
-  content:"„";
-  position:absolute;left:.9rem;top:-.2rem;
-  font-family:var(--serif);font-size:2.4rem;color:var(--accent);
-  font-weight:400;line-height:1;
-}
-.cv-quote p{
-  margin:0;font-family:var(--serif);font-style:italic;font-size:.92rem;
-  color:var(--ink-soft);line-height:1.5;
-  padding-left:1.4rem;
-}
-.cv-quote p b{font-style:normal;font-weight:500;color:var(--ink)}
-.cv-quote-meta{
-  margin-top:.7rem;padding-left:1.4rem;
-  font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ink-mute);font-weight:500;
-}
-
-/* Timeline rechts */
-.cv-timeline-col{display:flex;flex-direction:column}
-.cv-timeline-section{margin-bottom:2rem}
-.cv-timeline-section:last-child{margin-bottom:0}
-
+.cv-body{display:grid;gap:3rem}
+@media(max-width:820px){.cv-body{grid-template-columns:1fr!important}}
 .cv-section-label{
-  display:flex;align-items:center;gap:1rem;
-  margin-bottom:1.4rem;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1.4rem;padding-bottom:.6rem;border-bottom:1px solid var(--line);
 }
-.cv-section-label span{
-  font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
-  color:var(--ink);font-weight:600;
-}
-.cv-section-label::after{
-  content:"";flex:1;height:1px;background:var(--line);
-}
-
-.cv-timeline-list{
-  position:relative;
-  padding-left:2.5rem;
-}
-.cv-timeline-list::before{
-  content:"";position:absolute;
-  left:.55rem;top:.5rem;bottom:.5rem;
-  width:1px;background:var(--line);
-}
-
+.cv-timeline-section+.cv-timeline-section{margin-top:2.6rem}
+.cv-timeline-list{display:flex;flex-direction:column;gap:0}
 .cv-entry{
-  position:relative;
-  padding-bottom:1.4rem;
-  opacity:0;transform:translateY(10px);
-  transition:opacity .6s ease, transform .6s ease;
+  padding:1.3rem 0 1.3rem 1.6rem;border-left:1px solid var(--line-soft);position:relative;
+  opacity:0;transform:translateY(12px);transition:.55s;
 }
-.cv-entry.in{opacity:1;transform:translateY(0)}
-.cv-entry:last-child{padding-bottom:0}
-
+.cv-entry.in{opacity:1;transform:none}
 .cv-entry::before{
-  content:"";position:absolute;
-  left:-2.1rem;top:.45rem;
-  width:9px;height:9px;border-radius:50%;
-  background:var(--paper);
-  border:2px solid var(--accent);
-  box-shadow:0 0 0 4px var(--paper);
-  z-index:1;
-  transition:background .25s ease, transform .25s ease;
+  content:"";position:absolute;left:-4px;top:1.7rem;width:7px;height:7px;
+  background:var(--bg);border:1.5px solid var(--ink-faint);border-radius:50%;
 }
-.cv-entry:hover::before{
-  background:var(--accent);
-  transform:scale(1.15);
-}
-.cv-entry.current::before{
-  background:var(--accent);
-  animation:pulse 2.4s ease-in-out infinite;
-}
-@keyframes pulse{
-  0%,100%{box-shadow:0 0 0 4px var(--paper), 0 0 0 4px var(--paper)}
-  50%{box-shadow:0 0 0 4px var(--paper), 0 0 0 9px rgba(199,70,28,.15)}
-}
-
-.cv-entry-head{
-  display:flex;align-items:baseline;gap:.7rem;
-  flex-wrap:wrap;
-  margin-bottom:.15rem;
-}
-.cv-year{
-  font-family:var(--serif);font-style:italic;font-weight:400;
-  font-size:.85rem;color:var(--accent);
-  letter-spacing:.01em;
-  white-space:nowrap;
-}
+.cv-entry.current::before{background:var(--accent);border-color:var(--accent);box-shadow:0 0 9px var(--accent)}
+.cv-entry-head{display:flex;align-items:center;gap:.8rem;margin-bottom:.4rem}
+.cv-year{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;color:var(--ink-mute)}
 .cv-current-tag{
-  display:inline-flex;align-items:center;gap:.3rem;
-  font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
-  color:var(--accent);
-  padding:.12rem .45rem;
-  border:1px solid var(--accent);
-  border-radius:99px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);padding:.1rem .45rem;
 }
-.cv-current-tag::before{
-  content:"";width:4px;height:4px;border-radius:50%;background:var(--accent);
-  animation:blink 2s ease-in-out infinite;
-}
-@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+.cv-role{font-family:var(--display);font-size:1.1rem;font-weight:600;color:var(--ink-bright);line-height:1.2}
+.cv-company{font-size:.86rem;color:var(--ink-mute);margin-top:.15rem}
+.cv-company b{color:var(--blue);font-weight:600}
+.cv-desc{font-size:.9rem;color:var(--ink);margin-top:.6rem;max-width:42em}
 
-.cv-role{
-  font-family:var(--serif);font-weight:500;font-size:1.05rem;letter-spacing:-.01em;
-  line-height:1.25;margin:.1rem 0 .2rem;
-}
-.cv-company{
-  font-size:.76rem;color:var(--ink-soft);font-weight:500;
-  letter-spacing:.02em;
-}
-.cv-company b{color:var(--accent);font-weight:600}
-.cv-desc{font-size:.83rem;color:var(--ink-soft);margin-top:.4rem;line-height:1.5;max-width:60ch}
-
-/* ------- CONTACT ------- */
-.contact-wrap{
-  background:var(--paper-soft);
-  border-top:1px solid var(--line);
-  padding:5rem var(--gutter);
-}
+/* ---------- CONTACT ---------- */
+.contact-wrap{padding-top:5.5rem;padding-bottom:5rem}
 .contact-inner{
-  max-width:var(--maxw);margin:0 auto;
-  display:grid;grid-template-columns:1fr 1.2fr;
-  gap:clamp(2rem,5vw,4rem);align-items:center;
+  display:grid;grid-template-columns:.65fr 1fr;gap:3.5rem;align-items:start;
 }
-@media (max-width:880px){.contact-inner{grid-template-columns:1fr}}
-
 .contact-photo-wrap{position:relative}
-.contact-photo{
-  width:100%;aspect-ratio:4/5;object-fit:cover;
-  filter:none;
-  display:block;
-}
-.contact-photo:hover{filter:none}
+.contact-photo{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center 20%;display:block;filter:grayscale(.3) contrast(1.04)}
 .contact-badge{
-  position:absolute;
-  bottom:1rem;left:1rem;
-  background:var(--accent);color:var(--paper);
-  padding:.45rem .85rem;
-  font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
-  font-weight:600;
+  position:absolute;bottom:-1px;left:-1px;font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;
+  background:var(--accent);color:#0a141f;padding:.35rem .7rem;font-weight:600;display:flex;align-items:center;gap:.4rem;
 }
-
-.contact h2{
-  font-family:var(--serif);font-weight:300;
-  font-size:clamp(2.2rem, 5vw, 3.6rem);line-height:1;letter-spacing:-.028em;
-  margin:0 0 1rem;
-  font-variation-settings:"opsz" 144, "SOFT" 30;
-}
-.contact h2 em{font-style:italic;color:var(--accent)}
-.contact-sub{
-  font-family:var(--serif);font-style:italic;font-size:1.15rem;color:var(--ink-soft);
-  max-width:38ch;margin:0 0 2rem;font-weight:300;line-height:1.45;
-}
-
+.contact-badge::before{content:"";width:6px;height:6px;background:#0a141f;border-radius:50%;animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.contact h2{font-family:var(--display);font-weight:600;font-size:clamp(2rem,4vw,3rem);line-height:1.05;letter-spacing:-.02em;color:var(--ink-bright)}
+.contact-sub{margin:1.1rem 0 1.8rem;color:var(--ink);max-width:34em}
 .contact-linkedin{
-  display:inline-flex;align-items:center;gap:.7rem;
-  background:#0a66c2;color:#fff;
-  padding:.85rem 1.4rem;
-  font-size:.85rem;letter-spacing:.04em;
-  font-weight:600;
-  margin-bottom:2rem;
-  transition:background .25s, transform .25s, gap .25s;
+  display:inline-flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;
+  color:var(--ink-bright);border:1px solid var(--line);padding:.7rem 1.1rem;margin-bottom:2rem;transition:.25s;
 }
-.contact-linkedin:hover{background:#084d92;transform:translateY(-1px);gap:1rem}
-.contact-linkedin svg{width:18px;height:18px;fill:currentColor;flex-shrink:0}
-
-/* Form */
-.contact-form{margin-top:.5rem}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.7rem}
-@media (max-width:540px){.form-row{grid-template-columns:1fr}}
-.form-group{margin-bottom:.7rem}
-label{
-  display:block;
-  font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--ink-mute);margin-bottom:.35rem;font-weight:600;
+.contact-linkedin:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.contact-linkedin svg{width:17px;height:17px;fill:currentColor}
+.contact-form{display:flex;flex-direction:column;gap:1rem;max-width:520px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:520px){.form-row{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:.4rem}
+.form-group label{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute)}
+.form-group input,.form-group textarea{
+  font-family:var(--sans);font-size:.92rem;color:var(--ink-bright);
+  background:var(--bg-2);border:1px solid var(--line-soft);padding:.7rem .8rem;transition:.2s;
 }
-input,textarea{
-  width:100%;
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:0;
-  font-family:var(--sans);font-size:.94rem;
-  color:var(--ink);
-  padding:.6rem .8rem;
-  outline:none;
-  transition:border-color .2s;
-}
-input:focus,textarea:focus{border-color:var(--accent)}
-textarea{resize:vertical;min-height:90px;font-family:var(--sans)}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);background:var(--panel)}
+.form-group textarea{min-height:120px;resize:vertical}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--ink-faint)}
 .form-btn{
-  display:inline-flex;align-items:center;gap:.7rem;
-  background:var(--ink);color:var(--paper);
-  padding:.85rem 1.6rem;border:0;cursor:pointer;
-  font-family:var(--sans);font-size:.85rem;letter-spacing:.04em;
-  font-weight:600;
-  margin-top:.5rem;
-  transition:background .25s, gap .25s, transform .25s;
+  font-family:var(--mono);font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;
+  background:var(--accent);color:#0a141f;border:none;padding:.85rem 1.4rem;font-weight:600;transition:.2s;margin-top:.4rem;
 }
-.form-btn:hover{background:var(--accent);gap:1rem;transform:translateY(-1px)}
-.form-btn::after{content:"→"}
-.form-success{
-  display:none;
-  padding:1.2rem;
-  background:rgba(199,70,28,.08);
-  border:1px solid var(--accent);
-  font-family:var(--serif);font-style:italic;font-size:1.05rem;color:var(--ink);
-}
+.form-btn:hover{background:var(--accent-bright)}
+.form-success{display:none;color:var(--accent-bright);font-family:var(--mono);font-size:.9rem;padding:1rem 0}
+@media(max-width:780px){.contact-inner{grid-template-columns:1fr;gap:2.5rem}.contact-photo-wrap{max-width:300px}}
 
-/* ------- FOOTER ------- */
-footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:var(--paper)}
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--line-soft);margin-top:2rem}
 .foot-inner{
-  max-width:var(--maxw);margin:0 auto;
+  max-width:var(--maxw);margin:0 auto;padding:1.8rem 2rem;
   display:flex;justify-content:space-between;align-items:center;
-  flex-wrap:wrap;gap:1rem;
-  font-size:.78rem;letter-spacing:.04em;
-  color:var(--ink-mute);
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--ink-faint);
 }
-.foot-name{
-  font-family:var(--serif);font-style:italic;font-size:.95rem;letter-spacing:0;
-  color:var(--ink);
-}
-
-/* ------- Reveals ------- */
-.reveal{opacity:0;transform:translateY(16px);transition:opacity .8s ease, transform .8s ease}
-.reveal.in{opacity:1;transform:translateY(0)}
+.foot-name{color:var(--ink-mute)}
+@media(max-width:520px){.foot-inner{flex-direction:column;gap:.6rem;text-align:center}}
 </style>
 </head>
 <body>
 
 <nav id="nav">
   <div class="nav-inner">
-    <a href="#hero" class="nav-brand">
-      <span>Henning Sanders</span>
-    </a>
+    <a href="#hero" class="nav-brand">Henning Sanders</a>
     <div class="nav-links">
       <a href="#about">Über mich</a>
-      <a href="#case">11teamsports</a>
+      <a href="#case">Referenz</a>
       <a href="#cv">Lebenslauf</a>
       <a href="#contact">Kontakt</a>
     </div>
@@ -842,232 +482,369 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
     <div class="hero-tags">
       <span class="hero-tag"><span class="dot"></span>Order to Refund</span>
       <span class="hero-tag"><span class="dot"></span>Eventbasierte Cloudarchitektur</span>
-      <span class="hero-tag"><span class="dot"></span>Unterstützt von künstlicher Intelligenz</span>
+      <span class="hero-tag"><span class="dot"></span>KI-unterstützt</span>
     </div>
 
-    <h1>SAP Retail —<br><em>Moderne Architekturen.</em></h1>
+    <h1>Hi, ich bin Henning<br><em>und ich baue moderne SAP&nbsp;Architekturen für den Bereich Retail.</em></h1>
 
     <p class="hero-intro">
-      Ich baue SAP-Architekturen für den Retail von morgen. Live im Einsatz bei einem der ersten <strong>OMF/OMSA-Kunden</strong> Europas — und der Beleg, dass moderne Cloud bei SAP heute funktioniert.
+      Kein großes Beratungshaus — eine Person, die End-to-End denkt und anpackt. Live im Einsatz bei einem der ersten <strong>OMF/OMSA-Kunden</strong> Europas: der Beweis, dass moderne SAP-Cloud heute funktioniert.
     </p>
 
+    <div class="hero-coord">52.34°N · 12.37°E — Leipzig, DE / weltweit verfügbar</div>
   </div>
 
-  <div class="hero-image">
+  <div class="hero-image tech-frame">
+    <span class="frame-tag">PORTRAIT_01</span>
     <img src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/hero-dsag.jpg" alt="Henning Sanders auf der DSAG-Bühne" loading="lazy">
     <div class="caption">Henning · DSAG 2025</div>
   </div>
 </section>
 
-<!-- ABOUT / Was ich kann und wie ich arbeite -->
+<!-- ABOUT -->
 <section id="about">
+  <div class="sec-head">
+    <span class="kicker">§ 01 / Profil</span>
+    <h2 class="section-h">Was ich mitbringe — <em>und wie ich arbeite.</em></h2>
+  </div>
 
-  <!-- Tab Switcher -->
   <div class="ability-tabs" role="tablist">
     <button class="ability-tab active" role="tab" aria-selected="true" data-target="panel-mitbringe">
       <span class="ability-tab-num">01 — Tech</span>
-      <span class="ability-tab-label">Was ich <em>mitbringe</em></span>
+      <span class="ability-tab-label">Was ich mitbringe</span>
       <span class="ability-tab-sub">Vier Bereiche</span>
     </button>
     <button class="ability-tab" role="tab" aria-selected="false" data-target="panel-arbeit">
       <span class="ability-tab-num">02 — Haltung</span>
-      <span class="ability-tab-label">Wie ich <em>arbeite</em></span>
+      <span class="ability-tab-label">Wie ich arbeite</span>
       <span class="ability-tab-sub">Vier Prinzipien</span>
     </button>
   </div>
 
-  <!-- Panel 1: Was ich mitbringe (jetzt zuerst) -->
+  <!-- Panel 1 -->
   <div class="ability-panel active" id="panel-mitbringe" role="tabpanel">
-    <div class="ability-block">
-      <div class="ability-index">
-
-        <article class="ability-row reveal">
-          <div class="ability-row-meta">
-            <span class="ability-row-num">01</span>
-            <span class="ability-row-cat">Industry Solutions</span>
-          </div>
-          <div class="ability-row-body">
-            <h4>OMF, OMSA, OPPS, OSTA</h4>
-            <p>SAPs neueste Industry Solutions — reichlich Implementierungs­erfahrung aus dem produktiven Einsatz bei 11teamsports — dazu über Jahre gewachsene, enge Kontakte zu den Produktverantwortlichen bei SAP.</p>
-            <div class="tags"><span>OMF</span><span>OMSA</span><span>OPPS</span><span>OSTA</span></div>
-          </div>
-        </article>
-
-        <article class="ability-row reveal">
-          <div class="ability-row-meta">
-            <span class="ability-row-num">02</span>
-            <span class="ability-row-cat">Eventbasierte Architektur</span>
-          </div>
-          <div class="ability-row-body">
-            <h4>Integration Suite, Event Mesh &amp; Event Hub</h4>
-            <p>Tiefgreifendes Wissen über eventbasierte Architektur in der SAP-Welt — umgesetzt mit Integration Suite sowie Event Mesh / Event Hub.</p>
-            <div class="tags"><span>Integration Suite</span><span>Event Mesh</span><span>Event Hub</span><span>BTP</span></div>
-          </div>
-        </article>
-
-        <article class="ability-row reveal">
-          <div class="ability-row-meta">
-            <span class="ability-row-num">03</span>
-            <span class="ability-row-cat">S/4HANA Retail</span>
-          </div>
-          <div class="ability-row-body">
-            <h4>Vertieft in SD, POS, Schnittstellen &amp; Stammdaten</h4>
-            <p>S/4HANA Retail-Erfahrung als Berater, überwiegend in den Bereichen SD und POS. Starker Fokus auf Stammdaten und Schnittstellen von und aus S/4.</p>
-            <div class="tags"><span>S/4HANA</span><span>SD</span><span>POS</span><span>Stammdaten</span><span>Schnittstellen</span></div>
-          </div>
-        </article>
-
-        <article class="ability-row reveal">
-          <div class="ability-row-meta">
-            <span class="ability-row-num">04</span>
-            <span class="ability-row-cat">Motivation</span>
-          </div>
-          <div class="ability-row-body">
-            <h4>Kein Dienst nach Vorschrift</h4>
-            <p>Systemwissen ist heute überall verfügbar — was den Unterschied macht, ist der Antrieb, wirklich gute Lösungen zu bauen. Ich höre erst auf, wenn es rund ist.</p>
-          </div>
-        </article>
-
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">01</span>
+        <span class="ability-row-cat">Industry Solutions</span>
       </div>
+      <div class="ability-row-body">
+        <h4>OMF, OMSA, OPPS, OSTA</h4>
+        <p>SAPs neueste Industry Solutions — reichlich Implementierungserfahrung aus dem produktiven Einsatz bei einem führenden Sportretailer, dazu über Jahre gewachsene, enge Kontakte zu den Produktverantwortlichen bei SAP.</p>
+        <div class="tags"><span>OMF</span><span>OMSA</span><span>OPPS</span><span>OSTA</span></div>
+      </div>
+    </article>
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">02</span>
+        <span class="ability-row-cat">Eventbasierte Architektur</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>Integration Suite, Event Mesh &amp; Event Hub</h4>
+        <p>Tiefgreifendes Wissen über eventbasierte Architektur in der SAP-Welt — umgesetzt mit Integration Suite sowie Event Mesh / Event Hub.</p>
+        <div class="tags"><span>Integration Suite</span><span>Event Mesh</span><span>Event Hub</span><span>BTP</span></div>
+      </div>
+    </article>
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">03</span>
+        <span class="ability-row-cat">S/4HANA Retail</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>Vertieft in SD, POS, Schnittstellen &amp; Stammdaten</h4>
+        <p>S/4HANA Retail-Erfahrung als Berater, überwiegend in den Bereichen SD und POS. Starker Fokus auf Stammdaten und Schnittstellen von und aus S/4.</p>
+        <div class="tags"><span>S/4HANA</span><span>SD</span><span>POS</span><span>Stammdaten</span><span>Schnittstellen</span></div>
+      </div>
+    </article>
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">04</span>
+        <span class="ability-row-cat">Motivation</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>Kein Dienst nach Vorschrift</h4>
+        <p>Systemwissen ist heute überall verfügbar — was den Unterschied macht, ist der Antrieb, wirklich gute Lösungen zu bauen. Ich höre erst auf, wenn es rund ist.</p>
+      </div>
+    </article>
+  </div>
+
+  <!-- Panel 2 -->
+  <div class="ability-panel" id="panel-arbeit" role="tabpanel">
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">01</span>
+        <span class="ability-row-cat">Haltung</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>Locker und menschennah</h4>
+        <p>Die besten Ergebnisse entstehen, wenn Leute gerne miteinander arbeiten. Ich bringe immer Lockerheit und gute Stimmung ins Team — Probleme löst man nur gemeinsam.</p>
+      </div>
+    </article>
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">02</span>
+        <span class="ability-row-cat">Methode</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>Klare Methodik, klares Ziel</h4>
+        <p>Meine Zeit in der Pharmaindustrie hat mir Struktur gelehrt — von Anforderungsaufnahme bis Inbetriebnahme. Diese Leitplanken nutze ich heute noch.</p>
+      </div>
+    </article>
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">03</span>
+        <span class="ability-row-cat">Tempo</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>So effizient wie möglich</h4>
+        <p>Ich liebe kleine, schlagkräftige Teams, in denen jeder involviert ist. Routine-Aufgaben lagere ich konsequent an die KI aus — damit wir uns voll auf das Wesentliche konzentrieren können.</p>
+      </div>
+    </article>
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">04</span>
+        <span class="ability-row-cat">Perspektive</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>E2E denken über Systemgrenzen hinweg</h4>
+        <p>Ich will den End-to-End besten Prozess designen — und denke mich dafür in jedes Tool ein, egal ob SAP oder nicht. Ein „Kein SAP-Tool, also nicht mein Thema“ gibt es bei mir nicht.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- CASE -->
+<section class="case" id="case">
+  <div class="sec-head">
+    <span class="kicker">§ 02 / Referenz</span>
+    <h2 class="section-h">Vom Legacy-ERP zur <em>Cloud-Architektur.</em></h2>
+  </div>
+
+  <div class="case-intro">
+    <p class="case-body">
+      Der Kunde, ein führender Sportretailer, kam aus einem stark angepassten ERP-System, das über Jahre hinweg sämtliche Geschäftslogik abbildete. Die hohe Customizing-Rate machte Updates praktisch unmöglich — und viel Wissen existierte nur in den Köpfen einzelner Mitarbeiter.
+    </p>
+    <p class="case-body">
+      Die strategische Entscheidung: ein vollständiger Wechsel auf SAP — mit den neuesten Produkten im Backend und Frontend. Um die Einführung von Order Management Foundation, OMSA, Integration Suite und S/4HANA strukturiert und ohne große Komplikationen umzusetzen, haben wir zuerst das neue Frontend an die alte Backend-Welt angebunden und diese dann Schritt für Schritt durch die neue ersetzt. Das Ergebnis: ein angenehmer, gut beherrschbarer Übergang.
+    </p>
+    <p class="case-body">
+      Gleichzeitig wurde Logik konsequent aus dem ERP herausgelöst und in die Cloud-Systeme verlagert — für ein schlankes, wartbares Clean-Core-Setup. Heute dienen sowohl die Herangehensweise als auch die Architektur als SAP-Referenz, vorgestellt auf der DSAG-Jahrestagung und der ESUG Onsite.
+    </p>
+  </div>
+
+  <!-- Schematic -->
+  <div class="figure">
+    <div class="figure-head">
+      <span>Fig. 01 — <b>Order-to-Cash Referenzarchitektur</b></span>
+      <span class="fig-badge">Produktiv im Einsatz</span>
+    </div>
+    <div class="figure-scroll">
+    <svg class="schematic" viewBox="0 0 1460 760" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Order-to-Cash Referenzarchitektur rund um SAP OMF">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="rgba(176,205,232,.85)"/>
+        </marker>
+        <marker id="arrA" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#eea83c"/>
+        </marker>
+      </defs>
+
+      <!-- corner crosses -->
+      <path class="cross" d="M14 14 h12 M20 8 v12"/>
+      <path class="cross" d="M1446 746 h-12 M1440 752 v-12"/>
+
+      <!-- ===== EDGES (klickbar) ===== -->
+      <g class="edge" data-title="Activation Emails" data-detail="Basierend auf Triggern in der CDP – z. B. ein Kunde hat zum dritten Mal seine Ware später als erwartet bekommen – kann eine automatische E-Mail in Emarsys angestoßen werden.">
+        <path class="hit" d="M410 89 H198"/>
+        <path class="vis ae" d="M410 89 H198"/>
+        <text class="elabel" x="304" y="80" text-anchor="middle">Activation Emails</text>
+      </g>
+
+      <g class="edge" data-title="Order related emails" data-detail="Basierend auf Activities (Events) im OMF können wir auftragsbezogene Benachrichtigungen anstoßen, z. B. die Auftragsbestätigung. So liegen alle Templates an einer Stelle und werden auch von einer Stelle gesteuert.">
+        <path class="hit" d="M610 286 V230 H131 V116"/>
+        <path class="vis ae" d="M610 286 V230 H131 V116"/>
+        <text class="elabel" x="300" y="222" text-anchor="middle">Order related emails</text>
+      </g>
+
+      <g class="edge" data-title="Updates about customer orders" data-detail="[Detailtext folgt – hier kannst du die Beschreibung der Aktualisierungen Richtung SAP CDP ergänzen.]">
+        <path class="hit" d="M650 286 V200 H475 V116"/>
+        <path class="vis ae" d="M650 286 V200 H475 V116"/>
+        <text class="elabel" x="475" y="165" text-anchor="middle">Updates about customer orders</text>
+      </g>
+
+      <g class="edge" data-title="Sourcing (OMF ↔ OMSA)" data-detail="Sollte der Auftrag noch ohne Sourcing sein – z. B. bei Marktplätzen –, so hat das SAP OMF die Möglichkeit, dies durchzuführen.">
+        <path class="hit" d="M700 286 V210 H765 V116"/>
+        <path class="vis as ae" d="M700 286 V210 H765 V116"/>
+        <text class="elabel" x="722" y="200" text-anchor="middle">Sourcing</text>
+      </g>
+
+      <g class="edge" data-title="Sourcing (Frontends ↔ OMSA)" data-detail="Die Frontendsysteme können direkt Verfügbarkeiten von SAP OMSA abrufen und z. B. beim Hinzufügen des Produkts in den Warenkorb die Ware für den Kunden reservieren. So können Überverkäufe vermieden werden.">
+        <path class="hit" d="M1335 250 V89 H830"/>
+        <path class="vis as ae" d="M1335 250 V89 H830"/>
+        <text class="elabel" x="1080" y="80" text-anchor="middle">Sourcing</text>
+      </g>
+
+      <g class="edge" data-title="Statusupdates" data-detail="Da SAP OMF alle Statusupdates zu einem Verkaufsauftrag verwaltet, kann es diese direkt an die Frontendsysteme pushen. Dort können dann alle Informationen dem Kunden in seinem Account zur Verfügung gestellt werden.">
+        <path class="hit" d="M790 330 H1250"/>
+        <path class="vis ae" d="M790 330 H1250"/>
+        <text class="elabel" x="1015" y="322" text-anchor="middle">Statusupdates</text>
+      </g>
+
+      <g class="edge" data-title="Orders" data-detail="Die Frontendsysteme übergeben Aufträge inkl. Sourcing- und Payment-Informationen.">
+        <path class="hit" d="M1250 360 H790"/>
+        <path class="vis ae" d="M1250 360 H790"/>
+        <text class="elabel" x="1015" y="352" text-anchor="middle">Orders</text>
+      </g>
+
+      <g class="edge" data-title="Authorization" data-detail="Die Zahlung wird von den Frontendsystemen autorisiert. Nur autorisierte Zahlungen kommen in unseren Kosmos.">
+        <path class="hit" d="M1335 380 V470"/>
+        <path class="vis ae" d="M1335 380 V470"/>
+        <text class="elabel" x="1335" y="430" text-anchor="middle">Authorization</text>
+      </g>
+
+      <g class="edge" data-title="Payment Captures or Refunds" data-detail="Basierend auf den Events aus dem ERP-System – z. B. Rechnung oder Gutschrift – sprechen wir die PSPs an, um Geld einzuziehen bzw. zurückzuzahlen. Dadurch sind wir unabhängig davon, welches ERP uns die Informationen zur Verfügung stellt.">
+        <path class="hit" d="M790 400 H980 V498 H1240"/>
+        <path class="vis as ae" d="M790 400 H980 V498 H1240"/>
+        <text class="elabel" x="1108" y="487" text-anchor="middle">Payment Captures or Refunds</text>
+      </g>
+
+      <g class="edge" data-title="Outbound Tracking &amp; Returns" data-detail="Basierend auf dem Erstellen des Tracking-Labels übermitteln wir die Informationen an ParcelLab. Von dort erhält der Kunde Informationen zu seinem Sendungsverlauf. Er kann dort auch eine Retoure registrieren, die über das OMF im entsprechenden ERP-System angelegt wird.">
+        <path class="hit" d="M790 430 H940 V608 H1240"/>
+        <path class="vis as ae" d="M790 430 H940 V608 H1240"/>
+        <text class="elabel" x="1095" y="583" text-anchor="middle">Outbound Tracking</text>
+        <text class="elabel" x="1095" y="597" text-anchor="middle">and Registration of Returns</text>
+      </g>
+
+      <g class="edge" data-title="Orders + exchange of status updates" data-detail="Basierend auf den Orchestrierungsregeln im SAP OMF werden die Aufträge an das ERP-System übergeben. Im Gegenzug erhalten wir Events aus den ERP-Systemen, wenn sich etwas ändert – z. B. Mengenreduzierung oder Folgedokumente – und sprechen dann aus dem OMF die Folgesysteme an, z. B. PSP oder Emarsys.">
+        <path class="hit" d="M675 545 V446"/>
+        <path class="hit" d="M320 545 H830"/>
+        <path class="hit" d="M320 545 V626"/>
+        <path class="hit" d="M605 545 V626"/>
+        <path class="hit" d="M830 545 V626"/>
+        <path class="vis ae" d="M675 545 V446"/>
+        <path class="vis" d="M320 545 H830"/>
+        <path class="vis ae" d="M320 545 V626"/>
+        <path class="vis ae" d="M605 545 V626"/>
+        <path class="vis ae" d="M830 545 V626"/>
+        <text class="elabel" x="575" y="505" text-anchor="middle">Orders + exchange of status updates</text>
+      </g>
+
+      <g class="edge" data-title="To-Dos for Customer Service" data-detail="Sollten wir über unsere Events Aufgaben für den Customer Service entdecken, die nicht automatisiert werden sollen, legen wir direkt Tickets an – z. B. bei einer fehlgeschlagenen Rückerstattung.">
+        <path class="hit" d="M560 362 H198"/>
+        <path class="vis ae" d="M560 362 H198"/>
+        <text class="elabel" x="372" y="340" text-anchor="middle">To-Dos for</text>
+        <text class="elabel" x="372" y="354" text-anchor="middle">customer Service</text>
+      </g>
+
+      <!-- ===== NODES ===== -->
+      <g class="n-sap"><rect x="64" y="62" width="134" height="54"/></g>
+      <text class="n-label" x="131" y="93" text-anchor="middle">SAP Emarsys</text>
+
+      <g class="n-sap"><rect x="410" y="62" width="130" height="54"/></g>
+      <text class="n-label" x="475" y="93" text-anchor="middle">SAP CDP</text>
+
+      <g class="n-sap"><rect x="700" y="62" width="130" height="54"/></g>
+      <text class="n-label" x="765" y="93" text-anchor="middle">SAP OMSA</text>
+
+      <g class="n-sap"><rect x="560" y="286" width="230" height="160"/></g>
+      <text class="n-label big" x="675" y="372" text-anchor="middle">SAP OMF</text>
+
+      <g class="n-sap"><rect x="64" y="330" width="134" height="64"/></g>
+      <text class="n-label" x="131" y="357" text-anchor="middle">SAP Service</text>
+      <text class="n-label" x="131" y="375" text-anchor="middle">Cloud</text>
+
+      <g class="n-sap"><rect x="1250" y="250" width="170" height="130"/></g>
+      <text class="n-label" x="1335" y="308" text-anchor="middle">Webshops / Apps /</text>
+      <text class="n-label" x="1335" y="326" text-anchor="middle">Marketplaces</text>
+
+      <g class="n-ext"><rect x="1240" y="470" width="180" height="56"/></g>
+      <text class="n-label" x="1330" y="492" text-anchor="middle">Payment Service</text>
+      <text class="n-label" x="1330" y="510" text-anchor="middle">Provider</text>
+
+      <g class="n-ext"><rect x="1240" y="580" width="180" height="56"/></g>
+      <text class="n-label" x="1330" y="613" text-anchor="middle">ParcelLab</text>
+
+      <g class="n-ext"><rect x="250" y="626" width="140" height="58"/></g>
+      <text class="n-label" x="320" y="660" text-anchor="middle">Legacy ERP</text>
+
+      <g class="n-sap"><rect x="540" y="626" width="130" height="58"/></g>
+      <text class="n-label" x="605" y="660" text-anchor="middle">SAP S/4</text>
+
+      <g class="n-ext"><rect x="760" y="626" width="140" height="58"/></g>
+      <text class="n-label" x="830" y="660" text-anchor="middle">Dropshipper</text>
+
+      <!-- ===== LEGEND ===== -->
+      <g class="n-sap"><rect x="20" y="706" width="18" height="18"/></g>
+      <text class="leg-label" x="46" y="719">SAP-System (grau)</text>
+      <g class="n-ext"><rect x="250" y="706" width="18" height="18"/></g>
+      <text class="leg-label" x="276" y="719">Non-SAP-System (gelb)</text>
+    </svg>
+    </div>
+
+    <!-- Detail-Tooltip -->
+    <div class="dia-tip" id="diaTip">
+      <div class="dia-tip-head">
+        <span class="dia-tip-title"></span>
+        <button class="dia-tip-close" type="button" aria-label="Schließen">&times;</button>
+      </div>
+      <p></p>
+    </div>
+
+    <div class="figure-foot">
+      <b>Produktiv im Einsatz</b> bei einem führenden Sportretailer — von SAP als Referenz vorgestellt (DSAG-Jahrestagung &amp; ESUG Onsite). &nbsp;·&nbsp; Tipp: Pfeil anklicken für Details.
     </div>
   </div>
 
-  <!-- Panel 2: Wie ich arbeite -->
-  <div class="ability-panel" id="panel-arbeit" role="tabpanel">
-    <div class="ability-block">
-      <div class="ability-index">
-
-        <article class="ability-row reveal">
-          <div class="ability-row-meta">
-            <span class="ability-row-num">01</span>
-            <span class="ability-row-cat">Haltung</span>
+  <!-- Vorteile der Architektur -->
+  <div class="vorteile">
+    <div class="vorteile-label">Vorteile der Architektur</div>
+    <div class="vorteile-grid">
+      <div class="vorteile-photo tech-frame">
+        <span class="frame-tag">FIELD_02</span>
+        <img src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/191%20-%20Bernd%20Alsleben%20%28193%20von%20796%29.jpg" alt="Henning Sanders präsentiert die Architektur" loading="lazy">
+      </div>
+      <div class="vorteile-list">
+        <div class="vorteil reveal">
+          <span class="vorteil-num">01</span>
+          <div>
+            <h4>Clean Core — Logik raus aus dem ERP</h4>
+            <p>Viel Geschäftslogik wird aus dem ERP herausgelöst und in die Cloud-Systeme verlagert. Das ERP bleibt schlank und damit deutlich wartbarer sowie release- und upgradefähig.</p>
           </div>
-          <div class="ability-row-body">
-            <h4>Locker und menschennah</h4>
-            <p>Die besten Ergebnisse entstehen, wenn Leute gerne miteinander arbeiten. Ich bringe immer Lockerheit und gute Stimmung ins Team — Probleme löst man nur gemeinsam.</p>
+        </div>
+        <div class="vorteil reveal">
+          <span class="vorteil-num">02</span>
+          <div>
+            <h4>Neue Frontend-Kanäle in Minuten</h4>
+            <p>Neue Webshops, Apps oder Marktplätze müssen nur an das OMF angebunden werden — von dort werden alle Folgelogiken zentral gesteuert. Das macht das Anbinden neuer Kanäle sehr einfach.</p>
           </div>
-        </article>
-
-        <article class="ability-row reveal">
-          <div class="ability-row-meta">
-            <span class="ability-row-num">02</span>
-            <span class="ability-row-cat">Methode</span>
+        </div>
+        <div class="vorteil reveal">
+          <span class="vorteil-num">03</span>
+          <div>
+            <h4>ERP-Systeme austauschbar</h4>
+            <p>Da das OMF die zentrale Logik hält, lassen sich ERP-Systeme austauschen, ohne die Orchestrierung anzufassen. Neue Dropshipper oder ein neues ERP sind so schnell angebunden.</p>
           </div>
-          <div class="ability-row-body">
-            <h4>Klare Methodik, klares Ziel</h4>
-            <p>Meine Zeit in der Pharmaindustrie hat mir Struktur gelehrt — von Anforderungsaufnahme bis Inbetriebnahme. Diese Leitplanken nutze ich heute noch.</p>
+        </div>
+        <div class="vorteil reveal">
+          <span class="vorteil-num">04</span>
+          <div>
+            <h4>Komplett eventbasierte Architektur</h4>
+            <p>Alle Systeme kommunizieren asynchron und lose gekoppelt über Events. Das bringt bessere Skalierbarkeit (Dienste skalieren unabhängig), höhere Ausfallsicherheit (fällt eine Komponente aus, läuft der Rest weiter) und einfache Erweiterbarkeit — neue Verbraucher hängen sich an bestehende Event-Streams, ohne dass Produzenten angepasst werden müssen. Und das alles nahezu in Echtzeit.</p>
           </div>
-        </article>
-
-        <article class="ability-row reveal">
-          <div class="ability-row-meta">
-            <span class="ability-row-num">03</span>
-            <span class="ability-row-cat">Tempo</span>
-          </div>
-          <div class="ability-row-body">
-            <h4>So effizient wie möglich</h4>
-            <p>Ich liebe kleine, schlagkräftige Teams, in denen jeder involviert ist. Routine-Aufgaben lagere ich konsequent an die KI aus — damit wir uns voll auf das Wesentliche konzentrieren können.</p>
-          </div>
-        </article>
-
-        <article class="ability-row reveal">
-          <div class="ability-row-meta">
-            <span class="ability-row-num">04</span>
-            <span class="ability-row-cat">Perspektive</span>
-          </div>
-          <div class="ability-row-body">
-            <h4>E2E denken über Systemgrenzen hinweg</h4>
-            <p>Ich will den End-to-End besten Prozess designen — und denke mich dafür in jedes Tool ein, egal ob SAP oder nicht. Ein „Kein SAP-Tool, also nicht mein Thema" gibt es bei mir nicht.</p>
-          </div>
-        </article>
-
+        </div>
       </div>
     </div>
   </div>
 
 </section>
 
-<!-- CASE 11TEAMSPORTS -->
-<div class="case" id="case">
-  <div class="case-inner">
-    <div class="case-grid">
-      <!-- LINKS: Bild über volle Spalte -->
-      <div class="case-image-col">
-        <img class="case-img-full" src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/191%20-%20Bernd%20Alsleben%20%28193%20von%20796%29.jpg" alt="Henning Sanders präsentiert bei 11teamsports" loading="lazy">
-      </div>
-
-      <!-- RECHTS: Einleitung + Tech Stack -->
-      <div class="case-text-col">
-        <div class="eyebrow">Case Study · SAP Referenzkunde</div>
-        <h2 class="case-h">11teamsports — vom Legacy-ERP zur <em>Cloud-Architektur</em>.</h2>
-
-        <p class="case-body">
-          11teamsports kam aus einem stark angepassten ERP-System, das über Jahre hinweg sämtliche Geschäftslogik abbildete. Die hohe Customizing-Rate machte Updates praktisch unmöglich — und viel Wissen existierte nur in den Köpfen einzelner Mitarbeiter.
-        </p>
-        <p class="case-body">
-          Die strategische Entscheidung: ein vollständiger Wechsel auf SAP — mit den neuesten Produkten im Backend und Frontend. Um die Einführung von Order Management Foundation, OMSA, Integration Suite und S/4HANA strukturiert und ohne große Komplikationen umzusetzen, haben wir zuerst das neue Frontend an die alte Backend-Welt angebunden und diese dann Schritt für Schritt durch die neue ersetzt. Das Ergebnis: ein angenehmer, gut beherrschbarer Übergang.
-        </p>
-        <p class="case-body">
-          Gleichzeitig wurde Logik konsequent aus dem ERP herausgelöst und in die Cloud-Systeme verlagert — für ein schlankes, wartbares Clean-Core-Setup. Heute dienen sowohl die Herangehensweise als auch die Architektur als SAP-Referenz, vorgestellt auf der DSAG-Jahrestagung und der ESUG Onsite.
-        </p>
-
-      </div>
-    </div>
-
-    <!-- Tech Stack volle Breite unter dem Grid -->
-    <div class="case-stack">
-      <h4>Tech Stack</h4>
-
-      <div class="stack-layer">
-        <div class="stack-layer-label">Core / ERP</div>
-        <div class="stack-layer-items">
-          <span class="stack-pill"><b>S/4HANA PCE</b><span>Clean-Core ERP</span></span>
-        </div>
-      </div>
-
-      <div class="stack-layer">
-        <div class="stack-layer-label">Order Management</div>
-        <div class="stack-layer-items">
-          <span class="stack-pill"><b>OMF</b><span>Order Management Foundation</span></span>
-          <span class="stack-pill"><b>OMSA</b><span>Sourcing &amp; Availability</span></span>
-        </div>
-      </div>
-
-      <div class="stack-layer">
-        <div class="stack-layer-label">Integration &amp; Eventing</div>
-        <div class="stack-layer-items">
-          <span class="stack-pill"><b>Integration Suite</b><span>Connector / Middleware</span></span>
-          <span class="stack-pill"><b>EventHub / EventMesh</b><span>Event Broker</span></span>
-        </div>
-      </div>
-
-      <div class="stack-layer">
-        <div class="stack-layer-label">Experience</div>
-        <div class="stack-layer-items">
-          <span class="stack-pill"><b>Commerce Cloud</b><span>Customer Experience</span></span>
-          <span class="stack-pill"><b>Emarsys</b><span>Order- &amp; Invoice-Mails</span></span>
-        </div>
-      </div>
-
-      <div class="stack-layer">
-        <div class="stack-layer-label">Payment &amp; Fulfillment</div>
-        <div class="stack-layer-items">
-          <span class="stack-pill"><b>Adyen / PayPal</b><span>Payment Service Provider</span></span>
-          <span class="stack-pill"><b>ParcelLab</b><span>Versanddienstleister-Integration</span></span>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-</div>
-
-<!-- LEBENSLAUF -->
+<!-- CV -->
 <section id="cv">
-  <div class="eyebrow">Lebenslauf · Werdegang</div>
-  <h2 class="section-h">Von der Logistik in die <em>Cloud</em>.</h2>
+  <div class="sec-head">
+    <span class="kicker">§ 03 / Werdegang</span>
+    <h2 class="section-h">Von der Logistik in die <em>Cloud.</em></h2>
+  </div>
 
-  <!-- Meta-Daten oben über volle Breite -->
   <dl class="cv-meta-block">
     <div>
       <dt>Position</dt>
@@ -1087,15 +864,11 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
     </div>
   </dl>
 
-  <!-- Hauptbereich: Zweispaltig -->
   <div class="cv-body" style="grid-template-columns:1.4fr 1fr">
-
-    <!-- LINKS: Berufserfahrung -->
+    <!-- LINKS -->
     <div class="cv-timeline-col">
-
       <div class="cv-timeline-section">
-        <div class="cv-section-label"><span>Berufserfahrung</span></div>
-
+        <div class="cv-section-label">Berufserfahrung</div>
         <div class="cv-timeline-list">
 
           <div class="cv-entry current reveal">
@@ -1104,8 +877,8 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
               <span class="cv-current-tag">Aktuell</span>
             </div>
             <div class="cv-role">Consultant · Solution Architect</div>
-            <div class="cv-company"><b>RBOmnishore</b> · Retail (11teamsports, TEDi)</div>
-            <p class="cv-desc">E2E Order-to-Cash bei 11teamsports: Migration auf event-basierte Clean-Core-Architektur mit OMF, OMSA, CPI &amp; BTP. Aufbau zur SAP-Referenz­architektur, vorgestellt auf SAP-Messen.</p>
+            <div class="cv-company"><b>RBOmnishore</b> · Sport- &amp; Non-Food-Retail</div>
+            <p class="cv-desc">E2E Order-to-Cash bei einem führenden Sportretailer: Migration auf event-basierte Clean-Core-Architektur mit OMF, OMSA, CPI &amp; BTP. Aufbau zur SAP-Referenzarchitektur, vorgestellt auf SAP-Messen.</p>
           </div>
 
           <div class="cv-entry reveal">
@@ -1114,7 +887,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
             </div>
             <div class="cv-role">Gründer &amp; Geschäftsführer</div>
             <div class="cv-company"><b>Feel le Tour</b> / <b>KUNEGO</b> · Leipzig</div>
-            <p class="cv-desc">Gründung zweier Start-ups; Marketing, Vertrieb, Recht und Prozessdesign in voller Eigen­verantwortung.</p>
+            <p class="cv-desc">Gründung zweier Start-ups; Marketing, Vertrieb, Recht und Prozessdesign in voller Eigenverantwortung.</p>
           </div>
 
           <div class="cv-entry reveal">
@@ -1123,7 +896,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
             </div>
             <div class="cv-role">Functional Consultant · Pharma</div>
             <div class="cv-company"><b>Movilitas Consulting</b> · Mannheim</div>
-            <p class="cv-desc">Solution Architect &amp; Projektmanager in internationalen Pharma-Serialisierungs­projekten (SAP, Tracelink).</p>
+            <p class="cv-desc">Solution Architect &amp; Projektmanager in internationalen Pharma-Serialisierungsprojekten (SAP, Tracelink).</p>
           </div>
 
           <div class="cv-entry reveal">
@@ -1141,19 +914,17 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
             </div>
             <div class="cv-role">Projektmanager · 3PL Logistik</div>
             <div class="cv-company"><b>Arvato Supply Chain Solutions</b> · Deutschland</div>
-            <p class="cv-desc">Leitung mehrerer internationaler 3PL-Logistik­projekte mit Teams bis zu 15 Personen.</p>
+            <p class="cv-desc">Leitung mehrerer internationaler 3PL-Logistikprojekte mit Teams bis zu 15 Personen.</p>
           </div>
 
         </div>
       </div>
     </div>
 
-    <!-- RECHTS: Ausbildung + Persönliches -->
+    <!-- RECHTS -->
     <div class="cv-timeline-col">
-
       <div class="cv-timeline-section">
-        <div class="cv-section-label"><span>Ausbildung</span></div>
-
+        <div class="cv-section-label">Ausbildung</div>
         <div class="cv-timeline-list">
           <div class="cv-entry reveal">
             <div class="cv-entry-head">
@@ -1161,14 +932,13 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
             </div>
             <div class="cv-role">BSc Business Management · 1,0 First Class Honours</div>
             <div class="cv-company"><b>Oxford Brookes University</b> · UK</div>
-            <p class="cv-desc">Strategie, Marketing, Finanzwesen, Operations. Supply-Chain-Praktikum bei BMW Group, Oxford.</p>
+            <p class="cv-desc">Strategie, Marketing, Finanzwesen, Operations. Supply-Chain-Praktikum bei einem Premium-Automobilhersteller, Oxford.</p>
           </div>
         </div>
       </div>
 
       <div class="cv-timeline-section">
-        <div class="cv-section-label"><span>Persönliches</span></div>
-
+        <div class="cv-section-label">Persönliches</div>
         <div class="cv-timeline-list">
           <div class="cv-entry reveal">
             <div class="cv-entry-head">
@@ -1180,55 +950,57 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
           </div>
         </div>
       </div>
-
     </div>
   </div>
-
 </section>
 
 <!-- CONTACT -->
 <div class="contact-wrap" id="contact">
-  <div class="contact-inner">
-    <div class="contact-photo-wrap">
-      <img class="contact-photo" src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/320%20-%20Bernd%20Alsleben%20%28322%20von%20796%29.jpg" alt="Henning Sanders" loading="lazy">
-      <div class="contact-badge">Offen für Projekte</div>
+  <div class="block">
+    <div class="sec-head">
+      <span class="kicker">§ 04 / Kontakt</span>
+      <h2 class="section-h">Lass uns <em>sprechen.</em></h2>
     </div>
+    <div class="contact-inner">
+      <div class="contact-photo-wrap tech-frame">
+        <img class="contact-photo" src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/320%20-%20Bernd%20Alsleben%20%28322%20von%20796%29.jpg" alt="Henning Sanders" loading="lazy">
+        <div class="contact-badge">Offen für Projekte</div>
+      </div>
 
-    <div class="contact">
-      <div class="eyebrow">Jetzt kontaktieren</div>
-      <h2>Lass uns <em>sprechen.</em></h2>
-      <p class="contact-sub">
-        Neue Projekte, spannende Architekturfragen oder einfach ein kurzer Austausch — ich freue mich.
-      </p>
+      <div class="contact">
+        <p class="contact-sub">
+          Neue Projekte, spannende Architekturfragen oder einfach ein kurzer Austausch — ich freue mich.
+        </p>
 
-      <a href="https://www.linkedin.com/in/henning-sanders" target="_blank" rel="noopener" class="contact-linkedin">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        Auf LinkedIn vernetzen
-      </a>
+        <a href="https://www.linkedin.com/in/henning-sanders" target="_blank" rel="noopener" class="contact-linkedin">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          Auf LinkedIn vernetzen
+        </a>
 
-      <form class="contact-form" id="contactForm" onsubmit="submitForm(event)">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" placeholder="Max Mustermann" required>
+        <form class="contact-form" id="contactForm" onsubmit="submitForm(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" placeholder="Max Mustermann" required>
+            </div>
+            <div class="form-group">
+              <label for="email">E-Mail</label>
+              <input type="email" id="email" placeholder="max@firma.de" required>
+            </div>
           </div>
           <div class="form-group">
-            <label for="email">E-Mail</label>
-            <input type="email" id="email" placeholder="max@firma.de" required>
+            <label for="subject">Betreff</label>
+            <input type="text" id="subject" placeholder="Projektanfrage / Architekturberatung">
           </div>
+          <div class="form-group">
+            <label for="message">Nachricht</label>
+            <textarea id="message" placeholder="Kurze Beschreibung deines Anliegens…" required></textarea>
+          </div>
+          <button type="submit" class="form-btn">Nachricht senden</button>
+        </form>
+        <div class="form-success" id="formSuccess">
+          Danke — ich melde mich so bald wie möglich. 👋
         </div>
-        <div class="form-group">
-          <label for="subject">Betreff</label>
-          <input type="text" id="subject" placeholder="Projektanfrage / Architekturberatung">
-        </div>
-        <div class="form-group">
-          <label for="message">Nachricht</label>
-          <textarea id="message" placeholder="Kurze Beschreibung deines Anliegens…" required></textarea>
-        </div>
-        <button type="submit" class="form-btn">Nachricht senden</button>
-      </form>
-      <div class="form-success" id="formSuccess">
-        Danke — ich melde mich so bald wie möglich. 👋
       </div>
     </div>
   </div>
@@ -1252,7 +1024,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
       if (e.isIntersecting) {
         const el = e.target;
         const parent = el.parentElement;
-        const siblings = Array.from(parent.children).filter(c => c.classList.contains('reveal') || c.classList.contains('ability-item') || c.classList.contains('cv-row'));
+        const siblings = Array.from(parent.children).filter(c => c.classList.contains('reveal'));
         let delay = 0;
         siblings.forEach((s, idx) => { if (s === el) delay = idx * 90; });
         setTimeout(() => el.classList.add('in'), delay);
@@ -1260,7 +1032,7 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
       }
     });
   }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal, .ability-row, .ability-card, .skill-stripe, .cv-row, .cv-entry').forEach(el => io.observe(el));
+  document.querySelectorAll('.reveal, .cv-entry').forEach(el => io.observe(el));
 
   function submitForm(e){
     e.preventDefault();
@@ -1268,33 +1040,67 @@ footer{border-top:1px solid var(--line);padding:2rem var(--gutter);background:va
     document.getElementById('formSuccess').style.display = 'block';
   }
 
-  // Tab Switcher für Wie/Was
   document.querySelectorAll('.ability-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       if (tab.classList.contains('active')) return;
       const targetId = tab.dataset.target;
-      // Deactivate all
       document.querySelectorAll('.ability-tab').forEach(t => {
         t.classList.remove('active');
         t.setAttribute('aria-selected', 'false');
       });
       document.querySelectorAll('.ability-panel').forEach(p => p.classList.remove('active'));
-      // Activate target
       tab.classList.add('active');
       tab.setAttribute('aria-selected', 'true');
       const panel = document.getElementById(targetId);
       panel.classList.add('active');
-      // Re-trigger reveal animations inside the panel
-      panel.querySelectorAll('.reveal, .ability-row, .ability-card, .skill-stripe').forEach(el => {
+      panel.querySelectorAll('.reveal').forEach((el, idx) => {
         el.classList.remove('in');
-        // Force reflow
         void el.offsetWidth;
-        // Re-add after small delay for stagger
-        const idx = Array.from(el.parentNode.children).indexOf(el);
         setTimeout(() => el.classList.add('in'), 50 + idx * 90);
       });
     });
   });
+
+  /* ---------- Architektur-Diagramm: klickbare Pfeile ---------- */
+  (function () {
+    const fig = document.querySelector('.figure');
+    const tip = document.getElementById('diaTip');
+    if (!fig || !tip) return;
+    const titleEl = tip.querySelector('.dia-tip-title');
+    const bodyEl = tip.querySelector('p');
+    let current = null;
+
+    function closeTip() {
+      tip.classList.remove('show');
+      if (current) { current.classList.remove('on'); current = null; }
+    }
+
+    document.querySelectorAll('.edge').forEach(g => {
+      g.addEventListener('click', e => {
+        e.stopPropagation();
+        if (current && current !== g) current.classList.remove('on');
+        g.classList.add('on');
+        current = g;
+        titleEl.textContent = g.dataset.title || '';
+        bodyEl.textContent = g.dataset.detail || '';
+        const fr = fig.getBoundingClientRect();
+        const tw = 280;
+        let x = e.clientX - fr.left + 14;
+        let y = e.clientY - fr.top + 14;
+        if (x + tw > fig.clientWidth - 8) x = fig.clientWidth - tw - 8;
+        if (x < 8) x = 8;
+        tip.style.left = x + 'px';
+        tip.style.top = y + 'px';
+        tip.classList.add('show');
+      });
+    });
+
+    fig.addEventListener('click', closeTip);
+    tip.addEventListener('click', e => e.stopPropagation());
+    const closeBtn = tip.querySelector('.dia-tip-close');
+    if (closeBtn) closeBtn.addEventListener('click', e => { e.stopPropagation(); closeTip(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTip(); });
+  })();
 </script>
 </body>
 </html>
