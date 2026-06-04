@@ -185,8 +185,30 @@ section,.block{max-width:var(--maxw);margin:0 auto;padding:0 2rem}
 .arch-journey{display:none}
 @media(max-width:860px){
   .figure-scroll, .dia-tip, .click-hint{display:none!important}
+  .figure-head{display:none!important}
+  .figure-foot{border-top:none;padding-top:0;font-size:.85rem;justify-content:flex-start}
   .arch-journey{display:block;margin-top:.6rem}
+  .case-more{display:none}
+  .case-more.open{display:block}
+  .case-toggle{
+    display:inline-flex!important;align-items:center;gap:.4rem;
+    background:none;border:1px solid var(--line);padding:.4rem .8rem;
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent);cursor:pointer;margin-top:.3rem;transition:.2s;
+  }
+  .case-toggle:hover{border-color:var(--accent)}
+  .case-toggle .chevron{display:inline-block;transition:transform .25s}
+  .case-toggle.open .chevron{transform:rotate(180deg)}
 }
+/* legend (inside arch-journey, auto-hidden on desktop) */
+.aj-legend{
+  display:flex;gap:1.2rem;margin-bottom:.75rem;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--ink-mute);
+}
+.aj-legend span{display:flex;align-items:center;gap:.35rem}
+.aj-leg-sap,.aj-leg-ext{width:14px;height:10px;border-radius:2px}
+.aj-leg-sap{background:var(--accent-soft);border:1.3px solid var(--accent)}
+.aj-leg-ext{background:var(--blue-soft);border:1.3px solid var(--blue)}
 .aj-intro{
   font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
   color:var(--ink-faint);margin-bottom:.8rem;display:flex;align-items:center;gap:.45rem;
@@ -326,6 +348,7 @@ section,.block{max-width:var(--maxw);margin:0 auto;padding:0 2rem}
   line-height:1.1;letter-spacing:-.015em;color:var(--ink-bright);margin:.9rem 0 1.4rem;
 }
 .case-body{font-size:1rem;color:var(--ink);margin-bottom:1rem;max-width:46em;line-height:1.7}
+.case-toggle{display:none}
 .case-intro{margin-bottom:.5rem}
 .case-intro .case-body strong{color:var(--ink-bright)}
 .case-body strong{color:var(--ink-bright);font-weight:600}
@@ -569,11 +592,7 @@ footer{border-top:1px solid var(--line-soft);margin-top:2rem}
 <!-- HERO -->
 <section class="hero" id="hero">
   <div class="hero-text">
-    <div class="hero-tags">
-      <span class="hero-tag"><span class="dot"></span>Order to Refund</span>
-      <span class="hero-tag"><span class="dot"></span>Eventbasierte Cloudarchitektur</span>
-      <span class="hero-tag"><span class="dot"></span>KI-unterstützt</span>
-    </div>
+
 
     <h1>Hi, ich bin Henning –<br><em>Ihr Partner für moderne SAP&#8209;Architekturen im&nbsp;Retail.</em></h1>
 
@@ -581,7 +600,7 @@ footer{border-top:1px solid var(--line-soft);margin-top:2rem}
       Kein großes Beratungshaus — eine Person, die End-to-End denkt und anpackt. Live im Einsatz bei einem der ersten <strong>OMF/OMSA-Kunden</strong> Europas: der Beweis, dass moderne SAP-Cloud heute funktioniert.
     </p>
 
-    <div class="hero-coord">52.34°N · 12.37°E — Leipzig, DE / weltweit verfügbar</div>
+
   </div>
 
   <div class="hero-image tech-frame">
@@ -602,12 +621,10 @@ footer{border-top:1px solid var(--line-soft);margin-top:2rem}
     <button class="ability-tab active" role="tab" aria-selected="true" data-target="panel-mitbringe">
       <span class="ability-tab-num">01 — Tech</span>
       <span class="ability-tab-label">Was ich mitbringe</span>
-      <span class="ability-tab-sub">Vier Bereiche</span>
     </button>
     <button class="ability-tab" role="tab" aria-selected="false" data-target="panel-arbeit">
       <span class="ability-tab-num">02 — Haltung</span>
       <span class="ability-tab-label">Wie ich arbeite</span>
-      <span class="ability-tab-sub">Vier Prinzipien</span>
     </button>
   </div>
 
@@ -714,12 +731,15 @@ footer{border-top:1px solid var(--line-soft);margin-top:2rem}
     <p class="case-body">
       Der Kunde, ein führender Sportretailer, kam aus einem stark angepassten ERP-System, das über Jahre hinweg sämtliche Geschäftslogik abbildete. Die hohe Customizing-Rate machte Updates praktisch unmöglich — und viel Wissen existierte nur in den Köpfen einzelner Mitarbeiter.
     </p>
+    <button class="case-toggle" id="caseToggle" type="button">Weiterlesen <span class="chevron">▾</span></button>
+    <div class="case-more" id="caseMore">
     <p class="case-body">
       Die strategische Entscheidung: ein vollständiger Wechsel auf SAP — mit den neuesten Produkten im Backend und Frontend. Um die Einführung von Order Management Foundation, OMSA, Integration Suite und S/4HANA strukturiert und ohne große Komplikationen umzusetzen, haben wir zuerst das neue Frontend an die alte Backend-Welt angebunden und diese dann Schritt für Schritt durch die neue ersetzt. Das Ergebnis: ein angenehmer, gut beherrschbarer Übergang.
     </p>
     <p class="case-body">
       Gleichzeitig wurde Logik konsequent aus dem ERP herausgelöst und in die Cloud-Systeme verlagert — für ein schlankes, wartbares Clean-Core-Setup. Heute dienen sowohl die Herangehensweise als auch die Architektur als SAP-Referenz, vorgestellt auf der DSAG-Jahrestagung und der ESUG Onsite.
     </p>
+    </div>
   </div>
 
   <!-- Schematic -->
@@ -888,6 +908,10 @@ footer{border-top:1px solid var(--line-soft);margin-top:2rem}
     <!-- Mobile Architecture Journey (Swipe) — hidden on desktop -->
     <div class="arch-journey" id="archJourney">
       <div class="aj-intro">Order-Lifecycle &middot; durchswipen</div>
+      <div class="aj-legend">
+        <span><span class="aj-leg-sap"></span>SAP-System</span>
+        <span><span class="aj-leg-ext"></span>Non-SAP</span>
+      </div>
 
       <div class="aj-track" id="ajTrack">
 
@@ -1159,7 +1183,7 @@ footer{border-top:1px solid var(--line-soft);margin-top:2rem}
 <section id="cv">
   <div class="sec-head">
     <span class="kicker">§ 03 / Werdegang</span>
-    <h2 class="section-h">Von der Logistik in die <em>Cloud.</em></h2>
+    <h2 class="section-h">Was ich bisher <em>erleben durfte.</em></h2>
   </div>
 
   <dl class="cv-meta-block">
@@ -1418,6 +1442,18 @@ footer{border-top:1px solid var(--line-soft);margin-top:2rem}
     const closeBtn = tip.querySelector('.dia-tip-close');
     if (closeBtn) closeBtn.addEventListener('click', e => { e.stopPropagation(); closeTip(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTip(); });
+  })();
+
+  // Case body read-more toggle (mobile only)
+  (function(){
+    const btn = document.getElementById('caseToggle');
+    const more = document.getElementById('caseMore');
+    if (!btn || !more) return;
+    btn.addEventListener('click', () => {
+      const open = more.classList.toggle('open');
+      btn.classList.toggle('open', open);
+      btn.firstChild.textContent = open ? 'Weniger anzeigen ' : 'Weiterlesen ';
+    });
   })();
 
   // Mobile architecture journey (swipe carousel)
