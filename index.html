@@ -181,26 +181,71 @@ section,.block{max-width:var(--maxw);margin:0 auto;padding:0 2rem}
   .hero-image{max-width:380px}
 }
 
-/* ---------- Architecture: Mobile Vertical SVG ---------- */
-.arch-mobile{display:none}
+/* ---------- Architecture: Mobile Journey (Swipe) ---------- */
+.arch-journey{display:none}
 @media(max-width:860px){
   .figure-scroll, .dia-tip, .click-hint{display:none!important}
-  .arch-mobile{display:block;margin-top:.5rem}
-  .arch-mobile svg{width:100%;height:auto;display:block}
+  .arch-journey{display:block;margin-top:.6rem}
 }
-/* Mobile tooltip */
-.dia-tip-m{
-  position:fixed;bottom:0;left:0;right:0;z-index:50;
-  background:rgba(13,27,42,.98);border-top:2px solid var(--accent);
-  box-shadow:0 -8px 30px rgba(0,0,0,.5);
-  padding:1rem 1.2rem 1.4rem;
-  transform:translateY(100%);transition:transform .25s ease;
+.aj-intro{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-faint);margin-bottom:.8rem;display:flex;align-items:center;gap:.45rem;
 }
-.dia-tip-m.show{transform:translateY(0)}
-.dia-tip-m-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
-.dia-tip-m-title{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600}
-.dia-tip-m-close{background:none;border:none;color:var(--ink-mute);cursor:pointer;font-size:1.3rem;padding:0 .2rem}
-.dia-tip-m p{font-size:.9rem;line-height:1.6;color:var(--ink);margin:0}
+.aj-intro::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 8px var(--accent);flex-shrink:0}
+.aj-track{
+  display:flex;gap:.85rem;overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  margin:0 -1.4rem;padding:0 1.4rem .3rem;
+}
+.aj-track::-webkit-scrollbar{display:none}
+.aj-card{
+  flex:0 0 87%;scroll-snap-align:center;
+  border:1px solid var(--line);background:var(--panel);
+  padding:1rem 1rem 1.15rem;display:flex;flex-direction:column;
+}
+.aj-card-head{display:flex;flex-direction:column;gap:.25rem;margin-bottom:.85rem}
+.aj-num{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;
+  color:var(--accent);font-weight:600;
+}
+.aj-title{
+  font-family:var(--display);font-weight:600;font-size:1.12rem;
+  color:var(--ink-bright);letter-spacing:-.01em;line-height:1.12;
+  overflow-wrap:break-word;hyphens:auto;
+}
+.aj-diagram{
+  border:1px solid var(--line-soft);background:var(--bg-2);
+  padding:.65rem .55rem;margin-bottom:.9rem;
+}
+.aj-diagram svg{width:100%;height:auto;display:block}
+.aj-diagram .jn-sap rect{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.4}
+.aj-diagram .jn-ext rect{fill:var(--blue-soft);stroke:var(--blue);stroke-width:1.4}
+.aj-diagram .jn-omf rect{fill:rgba(238,168,60,.22);stroke:var(--accent);stroke-width:1.8}
+.aj-diagram .jlabel{font-family:var(--mono);fill:var(--ink-bright);font-size:12.5px}
+.aj-diagram .jsub{font-family:var(--mono);fill:var(--ink-mute);font-size:9px}
+.aj-diagram .jedge{stroke:rgba(176,205,232,.7);stroke-width:1.5;fill:none}
+.aj-diagram .jedge-a{stroke:var(--accent);stroke-width:1.7;fill:none}
+.aj-diagram .jelabel{font-family:var(--mono);fill:#bcccdc;font-size:9.5px;
+  stroke:var(--bg-2);stroke-width:3px;paint-order:stroke}
+.aj-text{font-size:.88rem;line-height:1.58;color:var(--ink);margin:0}
+.aj-text b{color:var(--ink-bright);font-weight:600}
+/* navigation */
+.aj-nav{display:flex;align-items:center;justify-content:center;gap:1.1rem;margin-top:1.1rem}
+.aj-dots{display:flex;gap:.5rem;align-items:center}
+.aj-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--line);
+  border:none;padding:0;cursor:pointer;transition:.25s;
+}
+.aj-dot.on{background:var(--accent);width:20px;border-radius:4px}
+.aj-arrow{
+  width:36px;height:36px;border:1px solid var(--line);background:var(--panel);
+  color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:.2s;flex-shrink:0;
+}
+.aj-arrow svg{width:16px;height:16px;display:block}
+.aj-arrow:hover{border-color:var(--accent);color:var(--accent)}
+.aj-arrow:disabled{opacity:.28;cursor:default;border-color:var(--line)}
 
 /* ---------- Section header ---------- */
 .sec-head{padding-top:3.5rem;margin-bottom:2.8rem}
@@ -840,141 +885,215 @@ footer{border-top:1px solid var(--line-soft);margin-top:2rem}
     </svg>
     </div>
 
-    <!-- Mobile Vertical Architecture (hidden on desktop) -->
-    <div class="arch-mobile" id="archMobile">
-      <svg viewBox="0 0 380 790" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <marker id="arrM" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 z" fill="rgba(176,205,232,.85)"/>
-          </marker>
-          <marker id="arrMA" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 z" fill="#eea83c"/>
-          </marker>
-        </defs>
+    <!-- Mobile Architecture Journey (Swipe) — hidden on desktop -->
+    <div class="arch-journey" id="archJourney">
+      <div class="aj-intro">Order-Lifecycle &middot; durchswipen</div>
 
-        <!-- ══ Webshops (top) ══ -->
-        <g class="n-sap"><rect x="65" y="8" width="250" height="46" rx="5"/></g>
-        <text class="n-label" x="190" y="36" text-anchor="middle" style="font-size:14px">Webshops / Apps / Marketplaces</text>
+      <div class="aj-track" id="ajTrack">
 
-        <!-- Arrow: Webshops → OMF -->
-        <g class="edge" data-title="Aufträge" data-detail="Die Frontendsysteme übergeben Aufträge inkl. Sourcing- und Payment-Informationen. SAP OMF ist die zentrale Anlaufstelle für alle Verkaufskanäle.">
-          <path class="hit" d="M170 54 V108"/>
-          <path class="vis ae" d="M170 54 V108" style="stroke:rgba(176,205,232,.78);stroke-width:1.6;fill:none"/>
-          <text class="elabel" x="160" y="85" text-anchor="end" style="font-size:12px">Aufträge</text>
-        </g>
-        <!-- Arrow: OMF → Webshops (Status) -->
-        <g class="edge" data-title="Statusupdates" data-detail="Da SAP OMF alle Statusupdates zu einem Verkaufsauftrag verwaltet, kann es diese direkt an die Frontendsysteme pushen. Dort werden alle Informationen dem Kunden in seinem Account zur Verfügung gestellt.">
-          <path class="hit" d="M210 108 V54"/>
-          <path class="vis ae" d="M210 108 V54" style="stroke:rgba(176,205,232,.78);stroke-width:1.6;fill:none"/>
-          <text class="elabel" x="220" y="85" text-anchor="start" style="font-size:12px">Statusupdates</text>
-        </g>
+        <!-- ── Station 1: Auftragserfassung ── -->
+        <article class="aj-card">
+          <div class="aj-card-head">
+            <span class="aj-num">01 / 05</span>
+            <h3 class="aj-title">Auftragserfassung</h3>
+          </div>
+          <div class="aj-diagram">
+            <svg viewBox="0 0 300 212" xmlns="http://www.w3.org/2000/svg" aria-label="Auftragserfassung">
+              <defs><marker id="ajH1" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse"><path d="M0 0 L7 3.5 L0 7 z" fill="rgba(176,205,232,.7)"/></marker></defs>
+              <!-- Kanal → PSP -->
+              <path class="jedge" d="M142 31 H192" marker-end="url(#ajH1)"/>
+              <text class="jelabel" x="167" y="24" text-anchor="middle">Auth</text>
+              <!-- Kanal → OMF -->
+              <path class="jedge" d="M78 60 V152" marker-end="url(#ajH1)"/>
+              <text class="jelabel" x="86" y="110" text-anchor="start">Auftrag</text>
+              <!-- Kanal → OMSA (Kanal kann sourcen) -->
+              <path class="jedge" d="M130 58 L192 104" marker-end="url(#ajH1)"/>
+              <!-- OMF → OMSA (OMF kann sourcen) -->
+              <path class="jedge" d="M130 156 L192 132" marker-end="url(#ajH1)"/>
+              <text class="jelabel" x="188" y="121" text-anchor="end">Sourcing</text>
+              <!-- Kanal -->
+              <g class="jn-ext"><rect x="14" y="14" width="128" height="46" rx="4"/></g>
+              <text class="jlabel" x="78" y="34" text-anchor="middle">Kanal</text>
+              <text class="jsub" x="78" y="49" text-anchor="middle">Web &middot; App &middot; Markt</text>
+              <!-- PSP -->
+              <g class="jn-ext"><rect x="192" y="14" width="94" height="46" rx="4"/></g>
+              <text class="jlabel" x="239" y="42" text-anchor="middle">PSP</text>
+              <!-- OMSA -->
+              <g class="jn-sap"><rect x="192" y="96" width="94" height="44" rx="4"/></g>
+              <text class="jlabel" x="239" y="123" text-anchor="middle">OMSA</text>
+              <!-- OMF -->
+              <g class="jn-omf"><rect x="14" y="152" width="128" height="48" rx="4"/></g>
+              <text class="jlabel" x="78" y="181" text-anchor="middle" style="font-weight:600">SAP OMF</text>
+            </svg>
+          </div>
+          <p class="aj-text">Bestellungen können aus <b>jedem Kanal</b> kommen — Webshop, App oder Marktplatz. Das Sourcing läuft über <b>OMSA</b>, die Zahlungsautorisierung direkt vom Kanal zum PSP. Nach Abschluss übergibt der Kanal den Auftrag ans OMF — fehlt das Sourcing, übernimmt es das OMF.</p>
+        </article>
 
-        <!-- ══ SAP OMF (central hub) ══ -->
-        <g class="n-sap"><rect x="40" y="108" width="300" height="82" rx="5"/></g>
-        <text class="n-label big" x="190" y="155" text-anchor="middle" style="font-size:20px;font-weight:600">SAP OMF</text>
+        <!-- ── Station 2: Kundenkommunikation ── -->
+        <article class="aj-card">
+          <div class="aj-card-head">
+            <span class="aj-num">02 / 05</span>
+            <h3 class="aj-title">Kundenkommunikation</h3>
+          </div>
+          <div class="aj-diagram">
+            <svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg" aria-label="Kundenkommunikation">
+              <defs><marker id="ajH2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse"><path d="M0 0 L7 3.5 L0 7 z" fill="rgba(176,205,232,.7)"/></marker></defs>
+              <!-- Verkaufskanal → OMF -->
+              <path class="jedge" d="M68 56 V92" marker-end="url(#ajH2)" stroke-dasharray="3 3"/>
+              <!-- OMF → Emarsys -->
+              <path class="jedge" d="M128 108 L172 50" marker-end="url(#ajH2)"/>
+              <text class="jelabel" x="146" y="74" text-anchor="middle">Mails</text>
+              <!-- OMF → CDP -->
+              <path class="jedge" d="M128 126 L172 130" marker-end="url(#ajH2)"/>
+              <text class="jelabel" x="150" y="120" text-anchor="middle">Profil</text>
+              <!-- Verkaufskanal (dashed input) -->
+              <g><rect x="6" y="12" width="124" height="44" rx="4" fill="none" stroke="var(--blue)" stroke-width="1.3" stroke-dasharray="4 3"/></g>
+              <text class="jlabel" x="68" y="31" text-anchor="middle" style="font-size:10.5px;fill:var(--ink)">neuer Verkaufskanal</text>
+              <text class="jsub" x="68" y="45" text-anchor="middle" style="font-size:8px">ohne eigene Schnittstellen</text>
+              <!-- OMF -->
+              <g class="jn-omf"><rect x="10" y="92" width="118" height="50" rx="4"/></g>
+              <text class="jlabel" x="69" y="122" text-anchor="middle" style="font-weight:600">SAP OMF</text>
+              <!-- Emarsys -->
+              <g class="jn-sap"><rect x="172" y="28" width="116" height="44" rx="4"/></g>
+              <text class="jlabel" x="230" y="48" text-anchor="middle">Emarsys</text>
+              <text class="jsub" x="230" y="62" text-anchor="middle">Auftragsbestätigung</text>
+              <!-- CDP -->
+              <g class="jn-sap"><rect x="172" y="108" width="116" height="44" rx="4"/></g>
+              <text class="jlabel" x="230" y="128" text-anchor="middle">SAP CDP</text>
+              <text class="jsub" x="230" y="142" text-anchor="middle">Kundenprofil</text>
+            </svg>
+          </div>
+          <p class="aj-text">Vom OMF aus werden alle CX-Komponenten <b>zentral</b> angesteuert: auftragsbezogene Mails wie die Bestätigung über Emarsys, Profil-Updates in die CDP. So gibt es nur <b>eine Stelle</b>, an der ein Update passiert — und neue <b>Verkaufskanäle</b> müssen keine eigenen Schnittstellen zu diesen Systemen mehr bauen, sondern docken nur ans OMF an.</p>
+        </article>
 
-        <!-- ══ Central spine ══ -->
-        <line x1="190" y1="190" x2="190" y2="670" stroke="rgba(176,205,232,.25)" stroke-width="2"/>
+        <!-- ── Station 3: Orchestrierung ── -->
+        <article class="aj-card">
+          <div class="aj-card-head">
+            <span class="aj-num">03 / 05</span>
+            <h3 class="aj-title">Orchestrierung</h3>
+          </div>
+          <div class="aj-diagram">
+            <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" aria-label="Orchestrierung">
+              <defs><marker id="ajH3" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse"><path d="M0 0 L7 3.5 L0 7 z" fill="rgba(176,205,232,.7)"/></marker></defs>
+              <!-- OMF down to junction, then branch to 3 ERPs -->
+              <path class="jedge" d="M150 60 V92"/>
+              <path class="jedge" d="M150 92 L52 136" marker-end="url(#ajH3)"/>
+              <path class="jedge" d="M150 92 V136" marker-end="url(#ajH3)"/>
+              <path class="jedge" d="M150 92 L248 136" marker-end="url(#ajH3)"/>
+              <text class="jelabel" x="168" y="112" text-anchor="start">Regeln</text>
+              <!-- OMF -->
+              <g class="jn-omf"><rect x="90" y="12" width="120" height="46" rx="4"/></g>
+              <text class="jlabel" x="150" y="40" text-anchor="middle" style="font-weight:600">SAP OMF</text>
+              <!-- ERPs -->
+              <g class="jn-ext"><rect x="8" y="138" width="88" height="46" rx="4"/></g>
+              <text class="jlabel" x="52" y="160" text-anchor="middle" style="font-size:11px">Legacy</text>
+              <text class="jsub" x="52" y="173" text-anchor="middle">ERP</text>
+              <g class="jn-sap"><rect x="106" y="138" width="88" height="46" rx="4"/></g>
+              <text class="jlabel" x="150" y="160" text-anchor="middle" style="font-size:11px">SAP S/4</text>
+              <text class="jsub" x="150" y="173" text-anchor="middle">HANA</text>
+              <g class="jn-ext"><rect x="204" y="138" width="88" height="46" rx="4"/></g>
+              <text class="jlabel" x="248" y="160" text-anchor="middle" style="font-size:11px">Drop-</text>
+              <text class="jsub" x="248" y="173" text-anchor="middle">shipper</text>
+            </svg>
+          </div>
+          <p class="aj-text">Das OMF entscheidet <b>regelbasiert</b>, an welches ERP ein Auftrag orchestriert wird. Das macht das Setup extrem flexibel: ERP-Systeme lassen sich austauschen oder ergänzen, ohne die umliegenden Prozesse anzufassen.</p>
+        </article>
 
-        <!-- ══ Branch nodes ══ -->
+        <!-- ── Station 4: Statusupdates ── -->
+        <article class="aj-card">
+          <div class="aj-card-head">
+            <span class="aj-num">04 / 05</span>
+            <h3 class="aj-title">Statusupdates</h3>
+          </div>
+          <div class="aj-diagram">
+            <svg viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg" aria-label="Statusupdates">
+              <defs><marker id="ajH4" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse"><path d="M0 0 L7 3.5 L0 7 z" fill="rgba(176,205,232,.7)"/></marker></defs>
+              <!-- inbound: ERP / PSP / ParcelLab → OMF -->
+              <path class="jedge" d="M94 52 L120 105" marker-end="url(#ajH4)"/>
+              <path class="jedge" d="M94 125 H120" marker-end="url(#ajH4)"/>
+              <path class="jedge" d="M94 198 L120 145" marker-end="url(#ajH4)"/>
+              <!-- outbound: OMF → Emarsys / CDP / Service Cloud -->
+              <path class="jedge" d="M190 105 L214 52" marker-end="url(#ajH4)"/>
+              <path class="jedge" d="M190 125 H214" marker-end="url(#ajH4)"/>
+              <path class="jedge" d="M190 145 L214 198" marker-end="url(#ajH4)"/>
+              <!-- inbound nodes -->
+              <g class="jn-sap"><rect x="8" y="30" width="86" height="44" rx="4"/></g>
+              <text class="jlabel" x="51" y="49" text-anchor="middle" style="font-size:11px">ERP</text>
+              <text class="jsub" x="51" y="62" text-anchor="middle">Lifecycle</text>
+              <g class="jn-ext"><rect x="8" y="103" width="86" height="44" rx="4"/></g>
+              <text class="jlabel" x="51" y="122" text-anchor="middle" style="font-size:11px">PSP</text>
+              <text class="jsub" x="51" y="135" text-anchor="middle">Payment-Status</text>
+              <g class="jn-ext"><rect x="8" y="176" width="86" height="44" rx="4"/></g>
+              <text class="jlabel" x="51" y="195" text-anchor="middle" style="font-size:11px">ParcelLab</text>
+              <text class="jsub" x="51" y="208" text-anchor="middle">Versand-Status</text>
+              <!-- OMF hub -->
+              <g class="jn-omf"><rect x="120" y="88" width="70" height="74" rx="4"/></g>
+              <text class="jlabel" x="155" y="121" text-anchor="middle" style="font-weight:600">SAP OMF</text>
+              <text class="jsub" x="155" y="135" text-anchor="middle">Gesamtsicht</text>
+              <!-- outbound nodes -->
+              <g class="jn-sap"><rect x="214" y="30" width="78" height="44" rx="4"/></g>
+              <text class="jlabel" x="253" y="49" text-anchor="middle" style="font-size:11px">Emarsys</text>
+              <text class="jsub" x="253" y="62" text-anchor="middle">Kunden-Mails</text>
+              <g class="jn-sap"><rect x="214" y="103" width="78" height="44" rx="4"/></g>
+              <text class="jlabel" x="253" y="122" text-anchor="middle" style="font-size:11px">SAP CDP</text>
+              <text class="jsub" x="253" y="135" text-anchor="middle">Push</text>
+              <g class="jn-sap"><rect x="214" y="176" width="78" height="44" rx="4"/></g>
+              <text class="jlabel" x="253" y="195" text-anchor="middle" style="font-size:9.5px">Service Cloud</text>
+              <text class="jsub" x="253" y="208" text-anchor="middle">bei Fehlern</text>
+            </svg>
+          </div>
+          <p class="aj-text">Alle Lifecycle-Updates laufen im OMF zusammen: <b>Versand-Status</b> von ParcelLab, <b>Payment-Status</b> vom PSP, weitere Events aus den ERP-Systemen. Das OMF ist damit die zentrale Stelle für den Gesamtüberblick. Kundenbenachrichtigungen laufen über <b>Emarsys</b>, Updates fließen in die CDP — und Fehler landen als Ticket in der <b>Service Cloud</b>.</p>
+        </article>
 
-        <!-- Station dots on spine -->
-        <circle cx="190" cy="245" r="5" fill="#eea83c" opacity=".6"/>
-        <circle cx="190" cy="315" r="5" fill="#eea83c" opacity=".6"/>
-        <circle cx="190" cy="385" r="5" fill="#eea83c" opacity=".6"/>
-        <circle cx="190" cy="455" r="5" fill="#eea83c" opacity=".6"/>
-        <circle cx="190" cy="525" r="5" fill="#eea83c" opacity=".6"/>
-        <circle cx="190" cy="595" r="5" fill="#eea83c" opacity=".6"/>
+        <!-- ── Station 5: Versand & Retouren ── -->
+        <article class="aj-card">
+          <div class="aj-card-head">
+            <span class="aj-num">05 / 05</span>
+            <h3 class="aj-title">Versand &amp; Retouren</h3>
+          </div>
+          <div class="aj-diagram">
+            <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" aria-label="Versand und Retouren">
+              <defs><marker id="ajH5" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse"><path d="M0 0 L7 3.5 L0 7 z" fill="rgba(176,205,232,.7)"/></marker></defs>
+              <!-- ParcelLab ↔ OMF -->
+              <path class="jedge" d="M150 52 V88" marker-end="url(#ajH5)" marker-start="url(#ajH5)"/>
+              <text class="jelabel" x="158" y="74" text-anchor="start">Tracking</text>
+              <!-- OMF → ERP -->
+              <path class="jedge" d="M133 138 L70 168" marker-end="url(#ajH5)"/>
+              <text class="jelabel" x="78" y="150" text-anchor="end">Retoure</text>
+              <!-- OMF → PSP -->
+              <path class="jedge" d="M167 138 L230 168" marker-end="url(#ajH5)"/>
+              <text class="jelabel" x="222" y="150" text-anchor="start">Refund</text>
+              <!-- ParcelLab -->
+              <g class="jn-ext"><rect x="93" y="10" width="114" height="42" rx="4"/></g>
+              <text class="jlabel" x="150" y="29" text-anchor="middle">ParcelLab</text>
+              <text class="jsub" x="150" y="43" text-anchor="middle">Tracking · Retoure</text>
+              <!-- OMF -->
+              <g class="jn-omf"><rect x="103" y="90" width="94" height="48" rx="4"/></g>
+              <text class="jlabel" x="150" y="119" text-anchor="middle" style="font-weight:600">SAP OMF</text>
+              <!-- ERP -->
+              <g class="jn-sap"><rect x="8" y="170" width="112" height="44" rx="4"/></g>
+              <text class="jlabel" x="64" y="190" text-anchor="middle" style="font-size:11px">ERP</text>
+              <text class="jsub" x="64" y="203" text-anchor="middle">Retourenauftrag</text>
+              <!-- PSP -->
+              <g class="jn-ext"><rect x="180" y="170" width="112" height="44" rx="4"/></g>
+              <text class="jlabel" x="236" y="190" text-anchor="middle" style="font-size:11px">PSP</text>
+              <text class="jsub" x="236" y="203" text-anchor="middle">Refund</text>
+            </svg>
+          </div>
+          <p class="aj-text">Über <b>ParcelLab</b> werden Outbound-Lieferungen getrackt und Retouren angemeldet. Das OMF legt den <b>Retourenauftrag</b> im passenden ERP an — und spricht nach der Gutschrift wieder den PSP an, um die Rückzahlung auszulösen.</p>
+        </article>
 
-        <!-- LEFT: OMSA (Sourcing) -->
-        <g class="edge" data-title="Sourcing (OMF ↔ OMSA)" data-detail="Sollte der Auftrag noch ohne Sourcing sein – z. B. bei Marktplätzen –, so hat das SAP OMF die Möglichkeit, über OMSA das Sourcing durchzuführen und die optimale Fulfillment-Quelle zu bestimmen.">
-          <path class="hit" d="M185 245 H155"/>
-          <path class="vis as ae" d="M185 245 H20" style="stroke:rgba(176,205,232,.78);stroke-width:1.6;fill:none"/>
-        </g>
-        <g class="n-sap"><rect x="15" y="225" width="130" height="40" rx="5"/></g>
-        <text class="n-label" x="80" y="250" text-anchor="middle" style="font-size:13px">SAP OMSA</text>
-        <text class="elabel" x="105" y="218" text-anchor="middle" style="font-size:10px;stroke-width:3px">Sourcing</text>
+      </div>
 
-        <!-- RIGHT: PSP (Captures/Refunds) -->
-        <g class="edge" data-title="Payment Captures oder Refunds" data-detail="Basierend auf Events aus dem ERP-System – z. B. Rechnung oder Gutschrift – sprechen wir die PSPs an, um Geld einzuziehen bzw. zurückzuzahlen. Dadurch sind wir unabhängig davon, welches ERP die Informationen liefert.">
-          <path class="hit" d="M195 315 H225"/>
-          <path class="vis as ae" d="M195 315 H235" style="stroke:rgba(176,205,232,.78);stroke-width:1.6;fill:none"/>
-        </g>
-        <g class="n-ext"><rect x="235" y="295" width="130" height="40" rx="5"/></g>
-        <text class="n-label" x="300" y="312" text-anchor="middle" style="font-size:12px">Payment Service</text>
-        <text class="n-label" x="300" y="326" text-anchor="middle" style="font-size:12px">Provider</text>
-        <text class="elabel" x="270" y="288" text-anchor="middle" style="font-size:10px;stroke-width:3px">Captures / Refunds</text>
-
-        <!-- LEFT: Emarsys (E-Mails) -->
-        <g class="edge" data-title="Auftragsbezogene E-Mails" data-detail="Basierend auf Activities (Events) im OMF werden auftragsbezogene Benachrichtigungen angestoßen, z. B. die Auftragsbestätigung. Alle Templates liegen an einer Stelle und werden zentral gesteuert.">
-          <path class="hit" d="M185 385 H155"/>
-          <path class="vis ae" d="M185 385 H15" style="stroke:rgba(176,205,232,.78);stroke-width:1.6;fill:none"/>
-        </g>
-        <g class="n-sap"><rect x="15" y="365" width="130" height="40" rx="5"/></g>
-        <text class="n-label" x="80" y="390" text-anchor="middle" style="font-size:13px">SAP Emarsys</text>
-        <text class="elabel" x="105" y="358" text-anchor="middle" style="font-size:10px;stroke-width:3px">E-Mails</text>
-
-        <!-- RIGHT: ParcelLab (Tracking) -->
-        <g class="edge" data-title="Versandverfolgung &amp; Retouren" data-detail="Basierend auf dem Erstellen des Tracking-Labels übermitteln wir die Informationen an ParcelLab. Von dort erhält der Kunde Informationen zu seinem Sendungsverlauf. Er kann dort auch eine Retoure registrieren, die über das OMF im entsprechenden ERP-System angelegt wird.">
-          <path class="hit" d="M195 455 H225"/>
-          <path class="vis as ae" d="M195 455 H235" style="stroke:rgba(176,205,232,.78);stroke-width:1.6;fill:none"/>
-        </g>
-        <g class="n-ext"><rect x="235" y="435" width="130" height="40" rx="5"/></g>
-        <text class="n-label" x="300" y="460" text-anchor="middle" style="font-size:13px">ParcelLab</text>
-        <text class="elabel" x="275" y="428" text-anchor="middle" style="font-size:10px;stroke-width:3px">Versandverfolgung</text>
-
-        <!-- LEFT: CDP (Updates) -->
-        <g class="edge" data-title="Updates zu Kundenaufträgen" data-detail="Auftragsstatus und Kundendaten fließen in die SAP CDP – für ein einheitliches Kundenprofil und personalisierte Erlebnisse über alle Touchpoints hinweg.">
-          <path class="hit" d="M185 525 H155"/>
-          <path class="vis ae" d="M185 525 H15" style="stroke:rgba(176,205,232,.78);stroke-width:1.6;fill:none"/>
-        </g>
-        <g class="n-sap"><rect x="15" y="505" width="130" height="40" rx="5"/></g>
-        <text class="n-label" x="80" y="530" text-anchor="middle" style="font-size:13px">SAP CDP</text>
-        <text class="elabel" x="105" y="498" text-anchor="middle" style="font-size:10px;stroke-width:3px">Kundenauftragsupdates</text>
-
-        <!-- LEFT: Service Cloud (To-Dos) -->
-        <g class="edge" data-title="To-Dos für Customer Service" data-detail="Sollten wir über unsere Events Aufgaben für den Customer Service entdecken, die nicht automatisiert werden sollen – z. B. bei einer fehlgeschlagenen Rückerstattung –, legen wir direkt Tickets in der SAP Service Cloud an.">
-          <path class="hit" d="M185 595 H155"/>
-          <path class="vis ae" d="M185 595 H15" style="stroke:rgba(176,205,232,.78);stroke-width:1.6;fill:none"/>
-        </g>
-        <g class="n-sap"><rect x="15" y="575" width="130" height="44" rx="5"/></g>
-        <text class="n-label" x="80" y="594" text-anchor="middle" style="font-size:12px">SAP Service</text>
-        <text class="n-label" x="80" y="608" text-anchor="middle" style="font-size:12px">Cloud</text>
-        <text class="elabel" x="105" y="568" text-anchor="middle" style="font-size:10px;stroke-width:3px">To-Dos</text>
-
-        <!-- ══ Bottom: ERPs ══ -->
-        <g class="edge" data-title="Aufträge + Statusaustausch" data-detail="Basierend auf den Orchestrierungsregeln im SAP OMF werden die Aufträge an das ERP-System übergeben. Im Gegenzug erhalten wir Events aus den ERP-Systemen – z. B. Mengenreduzierung oder Folgedokumente – und sprechen dann aus dem OMF die Folgesysteme an, z. B. PSP oder Emarsys.">
-          <path class="hit" d="M190 670 V690"/>
-          <path class="vis ae" d="M130 670 V700" style="stroke:rgba(176,205,232,.78);stroke-width:1.6;fill:none"/>
-          <path class="vis ae" d="M190 670 V700" style="stroke:rgba(176,205,232,.78);stroke-width:1.6;fill:none"/>
-          <path class="vis ae" d="M250 670 V700" style="stroke:rgba(176,205,232,.78);stroke-width:1.6;fill:none"/>
-        </g>
-        <text class="elabel" x="190" y="688" text-anchor="middle" style="font-size:10px;stroke-width:3px">Aufträge + Statusaustausch</text>
-
-        <g class="n-ext"><rect x="10" y="700" width="110" height="40" rx="5"/></g>
-        <text class="n-label" x="65" y="724" text-anchor="middle" style="font-size:12px">Legacy ERP</text>
-
-        <g class="n-sap"><rect x="135" y="700" width="110" height="40" rx="5"/></g>
-        <text class="n-label" x="190" y="724" text-anchor="middle" style="font-size:12px">SAP S/4</text>
-
-        <g class="n-ext"><rect x="260" y="700" width="110" height="40" rx="5"/></g>
-        <text class="n-label" x="315" y="724" text-anchor="middle" style="font-size:12px">Dropshipper</text>
-
-        <!-- Legend -->
-        <g class="n-sap"><rect x="15" y="760" width="14" height="14" rx="3"/></g>
-        <text class="leg-label" x="35" y="771" style="font-size:11px">SAP</text>
-        <g class="n-ext"><rect x="80" y="760" width="14" height="14" rx="3"/></g>
-        <text class="leg-label" x="100" y="771" style="font-size:11px">Non-SAP</text>
-        <text class="leg-label" x="365" y="771" text-anchor="end" style="font-size:10px" fill="rgba(255,255,255,0.35)">Tippen für Details</text>
-      </svg>
-
-      <!-- Mobile bottom-sheet tooltip -->
-      <div class="dia-tip-m" id="diaTipM">
-        <div class="dia-tip-m-head">
-          <span class="dia-tip-m-title"></span>
-          <button class="dia-tip-m-close" type="button" aria-label="Schließen">&times;</button>
-        </div>
-        <p></p>
+      <!-- Navigation -->
+      <div class="aj-nav">
+        <button class="aj-arrow" id="ajPrev" type="button" aria-label="Zurück" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="aj-dots" id="ajDots"></div>
+        <button class="aj-arrow" id="ajNext" type="button" aria-label="Weiter">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
       </div>
     </div>
 
@@ -1026,8 +1145,8 @@ footer{border-top:1px solid var(--line-soft);margin-top:2rem}
         <div class="vorteil reveal">
           <span class="vorteil-num">04</span>
           <div>
-            <h4>Komplett eventbasierte Architektur</h4>
-            <p>Alle Systeme kommunizieren asynchron und lose gekoppelt über Events. Das bringt bessere Skalierbarkeit (Dienste skalieren unabhängig), höhere Ausfallsicherheit (fällt eine Komponente aus, läuft der Rest weiter) und einfache Erweiterbarkeit — neue Verbraucher hängen sich an bestehende Event-Streams, ohne dass Produzenten angepasst werden müssen. Und das alles nahezu in Echtzeit.</p>
+            <h4>Gesamtübersicht des Auftrags im SAP OMF</h4>
+            <p>Im Order-to-Refund-Prozess werden viele Systeme angesprochen — teils ohne eigenen Zugriff, etwa das ERP eines Dropshippers. Den Gesamtüberblick über einen Auftrag zu behalten, ist dadurch schwierig, aber entscheidend: für die Unterstützung bei Kundenrückfragen und eine konsistente CX-Journey. Das OMF dient als zentrale Sammelstelle aller Updates — aus ERP-Systemen, Versanddienstleistern und Payment Service Providern — und macht den vollständigen Auftragsstatus an einer einzigen Stelle sichtbar.</p>
           </div>
         </div>
       </div>
@@ -1301,34 +1420,57 @@ footer{border-top:1px solid var(--line-soft);margin-top:2rem}
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTip(); });
   })();
 
-  // Mobile architecture tooltips (bottom-sheet style)
+  // Mobile architecture journey (swipe carousel)
   (function(){
-    const mob = document.getElementById('archMobile');
-    if (!mob) return;
-    const tip = document.getElementById('diaTipM');
-    const titleEl = tip.querySelector('.dia-tip-m-title');
-    const bodyEl = tip.querySelector('p');
-    let current = null;
+    const track = document.getElementById('ajTrack');
+    if (!track) return;
+    const cards = Array.from(track.querySelectorAll('.aj-card'));
+    const dotsWrap = document.getElementById('ajDots');
+    const prev = document.getElementById('ajPrev');
+    const next = document.getElementById('ajNext');
+    let active = 0;
 
-    function closeTip() {
-      tip.classList.remove('show');
-      if (current) { current.classList.remove('on'); current = null; }
+    cards.forEach((_, i) => {
+      const d = document.createElement('button');
+      d.className = 'aj-dot' + (i === 0 ? ' on' : '');
+      d.type = 'button';
+      d.setAttribute('aria-label', 'Station ' + (i + 1));
+      d.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(d);
+    });
+    const dots = Array.from(dotsWrap.children);
+
+    function goTo(i){
+      i = Math.max(0, Math.min(cards.length - 1, i));
+      cards[i].scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+    }
+    function setActive(i){
+      if (i === active) return;
+      active = i;
+      dots.forEach((d, idx) => d.classList.toggle('on', idx === i));
+      prev.disabled = (i === 0);
+      next.disabled = (i === cards.length - 1);
     }
 
-    mob.querySelectorAll('.edge').forEach(g => {
-      g.addEventListener('click', e => {
-        e.stopPropagation();
-        if (current && current !== g) current.classList.remove('on');
-        g.classList.add('on');
-        current = g;
-        titleEl.textContent = g.dataset.title || '';
-        bodyEl.textContent = g.dataset.detail || '';
-        tip.classList.add('show');
-      });
-    });
+    prev.addEventListener('click', () => goTo(active - 1));
+    next.addEventListener('click', () => goTo(active + 1));
 
-    mob.addEventListener('click', e => { if (!e.target.closest('.edge')) closeTip(); });
-    tip.querySelector('.dia-tip-m-close').addEventListener('click', e => { e.stopPropagation(); closeTip(); });
+    // Sync active card with scroll position
+    let raf = null;
+    track.addEventListener('scroll', () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        const center = track.scrollLeft + track.clientWidth / 2;
+        let best = 0, bestDist = Infinity;
+        cards.forEach((c, i) => {
+          const cc = c.offsetLeft + c.offsetWidth / 2;
+          const dist = Math.abs(cc - center);
+          if (dist < bestDist){ bestDist = dist; best = i; }
+        });
+        setActive(best);
+      });
+    }, {passive:true});
   })();
 </script>
 </body>
