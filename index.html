@@ -574,6 +574,12 @@ footer{border-top:1px solid var(--line-soft);margin-top:2rem}
 }
 .foot-name{color:var(--ink-mute)}
 @media(max-width:520px){.foot-inner{flex-direction:column;gap:.6rem;text-align:center}}
+.lang-switch{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
+  color:var(--ink-mute);border:1px solid var(--line);
+  padding:.3rem .55rem;transition:.2s;margin-left:.4rem;
+}
+.lang-switch:hover{color:var(--accent);border-color:var(--accent)}
 </style>
 </head>
 <body>
@@ -587,8 +593,8 @@ footer{border-top:1px solid var(--line-soft);margin-top:2rem}
       <a href="#cv">Lebenslauf</a>
       <a href="#contact">Kontakt</a>
     </div>
+    <a href="en.html" class="lang-switch" title="English version">EN</a>
   </div>
-</nav>
 
 <!-- HERO -->
 <section class="hero" id="hero">
