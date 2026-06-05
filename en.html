@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Henning Sanders — SAP Retail Architect</title>
+<meta name="description" content="Solution Architect focused on E2E Order-to-Cash and event-based SAP cloud architectures. Reference architecture at a leading sports retailer.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+/* Self-hosted fonts */
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/bricolage-grotesque-400.woff2) format('woff2')}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/bricolage-grotesque-500.woff2) format('woff2')}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/bricolage-grotesque-600.woff2) format('woff2')}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/bricolage-grotesque-700.woff2) format('woff2')}
+@font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:300;font-display:swap;src:url(fonts/hanken-grotesk-300.woff2) format('woff2')}
+@font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/hanken-grotesk-400.woff2) format('woff2')}
+@font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/hanken-grotesk-500.woff2) format('woff2')}
+@font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/hanken-grotesk-600.woff2) format('woff2')}
+@font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/hanken-grotesk-700.woff2) format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/jetbrains-mono-400.woff2) format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/jetbrains-mono-500.woff2) format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/jetbrains-mono-600.woff2) format('woff2')}
+</style>
+<style>
+:root{
+  --bg:#0a141f;
+  --bg-2:#0c1825;
+  --panel:#0f1e2e;
+  --panel-2:#102337;
+  --grid-fine:rgba(126,170,212,.04);
+  --grid-major:rgba(126,170,212,.075);
+  --line:rgba(150,188,220,.17);
+  --line-soft:rgba(150,188,220,.09);
+  --ink:#d4dfec;
+  --ink-bright:#f2f7fc;
+  --ink-mute:#708aa4;
+  --ink-faint:#47596e;
+  --accent:#eea83c;
+  --accent-bright:#f8bc55;
+  --accent-soft:rgba(238,168,60,.13);
+  --blue:#76b2e2;
+  --blue-soft:rgba(118,178,226,.12);
+  --sans:'Hanken Grotesk',-apple-system,sans-serif;
+  --display:'Bricolage Grotesque',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --maxw:1180px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px);
+  background-size:28px 28px,28px 28px,140px 140px,140px 140px;
+  background-position:center top;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  position:relative;
+}
+/* atmosphärischer Glow */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(900px 520px at 78% -8%, rgba(238,168,60,.10), transparent 60%),
+    radial-gradient(1100px 700px at 8% 18%, rgba(118,178,226,.10), transparent 55%);
+}
+::selection{background:var(--accent);color:#0a141f}
+
+a{color:inherit;text-decoration:none}
+em{font-style:normal;color:var(--accent)}
+
+/* ---------- Mono kicker / Labels ---------- */
+.kicker{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--accent);
+  display:inline-flex;align-items:center;gap:.6rem;
+}
+.kicker::before{
+  content:"";width:26px;height:1px;background:var(--accent);display:inline-block;
+}
+.eyebrow{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:1rem;
+}
+
+/* ---------- Tech frame (Eck-Markierungen) ---------- */
+.tech-frame{position:relative;border:1px solid var(--line)}
+.tech-frame::before,.tech-frame::after{
+  content:"";position:absolute;width:9px;height:9px;border:1.5px solid var(--accent);
+}
+.tech-frame::before{top:-1px;left:-1px;border-right:none;border-bottom:none}
+.tech-frame::after{bottom:-1px;right:-1px;border-left:none;border-top:none}
+
+/* ---------- NAV ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  border-bottom:1px solid transparent;transition:.3s;
+}
+nav.scrolled{
+  background:rgba(10,20,31,.82);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line-soft);
+}
+.nav-inner{
+  max-width:var(--maxw);margin:0 auto;padding:1.1rem 2rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.nav-brand{
+  font-family:var(--mono);font-size:.82rem;letter-spacing:.04em;
+  color:var(--ink-bright);font-weight:500;display:flex;align-items:center;gap:.55rem;
+}
+.nav-brand::before{
+  content:"";width:8px;height:8px;background:var(--accent);
+  box-shadow:0 0 10px var(--accent);border-radius:1px;
+}
+.nav-links{display:flex;gap:2rem}
+.nav-links a{
+  font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;
+  color:var(--ink-mute);text-transform:uppercase;transition:.2s;position:relative;
+}
+.nav-links a:hover{color:var(--accent)}
+@media(max-width:720px){.nav-links{display:none}}
+
+/* ---------- Layout helpers ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 2rem}
+section,.block{max-width:var(--maxw);margin:0 auto;padding:0 2rem}
+#about,#case,#cv,#contact{scroll-margin-top:78px}
+
+/* ---------- HERO ---------- */
+.hero{
+  padding-top:10rem;padding-bottom:3.5rem;
+  display:grid;grid-template-columns:1fr .92fr;gap:3.5rem;align-items:center;
+}
+.hero-tags{display:flex;flex-wrap:wrap;gap:.55rem;margin-bottom:2rem}
+.hero-tag{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;
+  color:var(--ink);background:var(--blue-soft);
+  border:1px solid var(--line-soft);
+  padding:.34rem .7rem;display:inline-flex;align-items:center;gap:.5rem;
+}
+.hero-tag .dot{width:6px;height:6px;background:var(--accent);border-radius:50%;flex-shrink:0}
+.hero h1{
+  font-family:var(--display);font-weight:600;
+  font-size:clamp(2.1rem,4.3vw,3.5rem);line-height:1.04;
+  letter-spacing:-.02em;color:var(--ink-bright);
+}
+.hero-intro{
+  margin-top:1.7rem;max-width:30em;font-size:1.06rem;color:var(--ink);
+  line-height:1.65;
+}
+.hero-intro strong{color:var(--accent-bright);font-weight:600}
+.hero-coord{
+  margin-top:2.2rem;font-family:var(--mono);font-size:.7rem;
+  letter-spacing:.14em;color:var(--ink-faint);text-transform:uppercase;
+}
+.hero-image{position:relative}
+.hero-image img{
+  width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center 18%;
+  display:block;filter:grayscale(.25) contrast(1.04);
+}
+.hero-image .frame-tag{
+  position:absolute;top:-1px;left:-1px;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;
+  background:var(--accent);color:#0a141f;padding:.25rem .55rem;font-weight:600;
+}
+.hero-image .caption{
+  position:absolute;bottom:-1px;right:-1px;
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;
+  color:var(--ink-bright);background:rgba(10,20,31,.85);
+  border-top:1px solid var(--line);border-left:1px solid var(--line);
+  padding:.4rem .7rem;
+}
+@media(max-width:860px){
+  .hero{grid-template-columns:1fr;gap:2.5rem;padding-top:8rem}
+  .hero-image{max-width:380px}
+}
+
+/* ---------- Architecture: Mobile Journey (Swipe) ---------- */
+.arch-journey{display:none}
+@media(max-width:860px){
+  .figure-scroll, .dia-tip, .click-hint{display:none!important}
+  .figure-head{display:none!important}
+  .figure-foot{border-top:none;padding-top:0;font-size:.85rem;justify-content:flex-start}
+  .arch-journey{display:block;margin-top:.6rem}
+  .case-more{display:none}
+  .case-more.open{display:block}
+  .case-toggle{
+    display:inline-flex!important;align-items:center;gap:.4rem;
+    background:none;border:1px solid var(--line);padding:.4rem .8rem;
+    font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent);cursor:pointer;margin-top:.3rem;transition:.2s;
+  }
+  .case-toggle:hover{border-color:var(--accent)}
+  .case-toggle .chevron{display:inline-block;transition:transform .25s}
+  .case-toggle.open .chevron{transform:rotate(180deg)}
+}
+/* legend (inside arch-journey, auto-hidden on desktop) */
+.aj-legend{
+  display:flex;gap:1.2rem;margin-bottom:.75rem;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;color:var(--ink-mute);
+}
+.aj-legend span{display:flex;align-items:center;gap:.35rem}
+.aj-leg-sap,.aj-leg-ext{width:14px;height:10px;border-radius:2px}
+.aj-leg-sap{background:var(--accent-soft);border:1.3px solid var(--accent)}
+.aj-leg-ext{background:var(--blue-soft);border:1.3px solid var(--blue)}
+.aj-intro{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-faint);margin-bottom:.8rem;display:flex;align-items:center;gap:.45rem;
+}
+.aj-intro::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 8px var(--accent);flex-shrink:0}
+.aj-track{
+  display:flex;gap:.85rem;overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  margin:0 -1.4rem;padding:0 1.4rem .3rem;
+}
+.aj-track::-webkit-scrollbar{display:none}
+.aj-card{
+  flex:0 0 87%;scroll-snap-align:center;
+  border:1px solid var(--line);background:var(--panel);
+  padding:1rem 1rem 1.15rem;display:flex;flex-direction:column;
+}
+.aj-card-head{display:flex;flex-direction:column;gap:.25rem;margin-bottom:.85rem}
+.aj-num{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;
+  color:var(--accent);font-weight:600;
+}
+.aj-title{
+  font-family:var(--display);font-weight:600;font-size:1.12rem;
+  color:var(--ink-bright);letter-spacing:-.01em;line-height:1.12;
+  overflow-wrap:break-word;hyphens:auto;
+}
+.aj-diagram{
+  border:1px solid var(--line-soft);background:var(--bg-2);
+  padding:.65rem .55rem;margin-bottom:.9rem;
+}
+.aj-diagram svg{width:100%;height:auto;display:block}
+.aj-diagram .jn-sap rect{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.4}
+.aj-diagram .jn-ext rect{fill:var(--blue-soft);stroke:var(--blue);stroke-width:1.4}
+.aj-diagram .jn-omf rect{fill:rgba(238,168,60,.22);stroke:var(--accent);stroke-width:1.8}
+.aj-diagram .jlabel{font-family:var(--mono);fill:var(--ink-bright);font-size:12.5px}
+.aj-diagram .jsub{font-family:var(--mono);fill:var(--ink-mute);font-size:9px}
+.aj-diagram .jedge{stroke:rgba(176,205,232,.7);stroke-width:1.5;fill:none}
+.aj-diagram .jedge-a{stroke:var(--accent);stroke-width:1.7;fill:none}
+.aj-diagram .jelabel{font-family:var(--mono);fill:#bcccdc;font-size:9.5px;
+  stroke:var(--bg-2);stroke-width:3px;paint-order:stroke}
+.aj-text{font-size:.88rem;line-height:1.58;color:var(--ink);margin:0}
+.aj-text b{color:var(--ink-bright);font-weight:600}
+/* navigation */
+.aj-nav{display:flex;align-items:center;justify-content:center;gap:1.1rem;margin-top:1.1rem}
+.aj-dots{display:flex;gap:.5rem;align-items:center}
+.aj-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--line);
+  border:none;padding:0;cursor:pointer;transition:.25s;
+}
+.aj-dot.on{background:var(--accent);width:20px;border-radius:4px}
+.aj-arrow{
+  width:36px;height:36px;border:1px solid var(--line);background:var(--panel);
+  color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:.2s;flex-shrink:0;
+}
+.aj-arrow svg{width:16px;height:16px;display:block}
+.aj-arrow:hover{border-color:var(--accent);color:var(--accent)}
+.aj-arrow:disabled{opacity:.28;cursor:default;border-color:var(--line)}
+
+/* ---------- Section header ---------- */
+.sec-head{padding-top:3.5rem;margin-bottom:2.8rem}
+.section-h{
+  font-family:var(--display);font-weight:600;
+  font-size:clamp(1.9rem,3.6vw,2.9rem);line-height:1.08;
+  letter-spacing:-.015em;color:var(--ink-bright);margin-top:.9rem;
+}
+
+/* ---------- ABOUT / Tabs ---------- */
+#about{padding-top:5.5rem}
+.ability-tabs{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  border:1px solid var(--line);margin-bottom:0;
+}
+.ability-tab{
+  background:transparent;border:none;cursor:pointer;text-align:left;
+  padding:1.5rem 1.6rem;color:var(--ink-mute);
+  border-right:1px solid var(--line);transition:.25s;position:relative;
+  display:flex;flex-direction:column;gap:.35rem;
+}
+.ability-tab:last-child{border-right:none}
+.ability-tab:hover{background:var(--bg-2)}
+.ability-tab.active{background:var(--panel);color:var(--ink)}
+.ability-tab.active::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent);
+}
+.ability-tab-num{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;color:var(--accent)}
+.ability-tab-label{font-family:var(--display);font-size:1.45rem;font-weight:600;color:var(--ink-bright);line-height:1.1}
+.ability-tab.active .ability-tab-label{color:var(--ink-bright)}
+.ability-tab-sub{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;color:var(--ink-faint);text-transform:uppercase}
+
+.ability-panel{display:none;border:1px solid var(--line);border-top:none;background:var(--panel)}
+.ability-panel.active{display:block;animation:fadeUp .5s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.ability-row{
+  display:grid;grid-template-columns:230px 1fr;gap:2rem;
+  padding:1.9rem 2rem;border-bottom:1px solid var(--line-soft);
+  opacity:0;transform:translateY(14px);transition:.6s;
+}
+.ability-row.in{opacity:1;transform:none}
+.ability-row:last-child{border-bottom:none}
+.ability-row-meta{display:flex;flex-direction:column;gap:.5rem}
+.ability-row-num{font-family:var(--mono);font-size:1.6rem;color:var(--accent);font-weight:500;line-height:1}
+.ability-row-cat{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+.ability-row-body h4{font-family:var(--display);font-size:1.18rem;font-weight:600;color:var(--ink-bright);margin-bottom:.55rem;letter-spacing:-.01em}
+.ability-row-body p{font-size:.95rem;color:var(--ink);max-width:46em}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1rem}
+.tags span{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.02em;
+  color:var(--ink-mute);border:1px solid var(--line-soft);
+  padding:.22rem .55rem;background:var(--bg-2);
+}
+@media(max-width:680px){
+  .ability-row{grid-template-columns:1fr;gap:.8rem;padding:1.5rem 1.3rem}
+  .ability-row-meta{flex-direction:row;align-items:baseline;gap:.9rem}
+  .ability-tab{padding:1.1rem}
+  .ability-tab-label{font-size:1.15rem}
+}
+
+/* ---------- CASE ---------- */
+.case{padding-top:5.5rem}
+.case-grid{
+  display:grid;grid-template-columns:.8fr 1.2fr;gap:3rem;align-items:start;
+}
+.case-image-col{position:relative}
+.case-img-full{
+  width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center 20%;
+  display:block;filter:grayscale(.3) contrast(1.05);
+}
+.case-image-col .frame-tag{
+  position:absolute;top:-1px;left:-1px;font-family:var(--mono);font-size:.62rem;
+  letter-spacing:.12em;background:var(--blue);color:#0a141f;padding:.25rem .55rem;font-weight:600;
+}
+.case-h{
+  font-family:var(--display);font-weight:600;font-size:clamp(1.7rem,3.2vw,2.5rem);
+  line-height:1.1;letter-spacing:-.015em;color:var(--ink-bright);margin:.9rem 0 1.4rem;
+}
+.case-body{font-size:1rem;color:var(--ink);margin-bottom:1rem;max-width:46em;line-height:1.7}
+.case-toggle{display:none}
+.case-intro{margin-bottom:.5rem}
+.case-intro .case-body strong{color:var(--ink-bright)}
+.case-body strong{color:var(--ink-bright);font-weight:600}
+@media(max-width:780px){.case-grid{grid-template-columns:1fr;gap:2rem}.case-image-col{max-width:340px}}
+
+/* ---------- Architecture figure (interaktiv) ---------- */
+.figure{
+  margin-top:3rem;border:1px solid var(--line);background:var(--bg-2);position:relative;
+  padding:1.4rem 1.4rem 1rem;
+}
+.figure-head{
+  display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;
+  font-family:var(--mono);font-size:.82rem;letter-spacing:.10em;text-transform:uppercase;
+  color:var(--ink);margin-bottom:.9rem;
+}
+.figure-head b{color:var(--accent);font-weight:600}
+.figure-hint{text-transform:none;letter-spacing:.04em;color:var(--ink-faint)}
+.figure-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.schematic{width:100%;min-width:900px;height:auto;display:block}
+/* nodes */
+.n-sap rect{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.6}
+.n-ext rect{fill:var(--blue-soft);stroke:var(--blue);stroke-width:1.6}
+.n-label{font-family:var(--mono);font-size:17px;fill:var(--ink-bright);letter-spacing:.01em}
+.n-label.big{font-size:22px;font-weight:500}
+/* edges */
+.edge{cursor:pointer}
+.edge .hit{stroke:transparent;stroke-width:24;fill:none}
+.edge .vis{stroke:rgba(176,205,232,.78);stroke-width:1.8;fill:none;transition:stroke .2s, stroke-width .2s}
+.edge .ae{marker-end:url(#arr)}
+.edge .as{marker-start:url(#arr)}
+.edge:hover .vis{stroke:#cfe0f0;stroke-width:2.8}
+.edge.on .vis{stroke:var(--accent);stroke-width:2.6}
+.edge.on .ae{marker-end:url(#arrA)}
+.edge.on .as{marker-start:url(#arrA)}
+.elabel{
+  font-family:var(--mono);font-size:15px;fill:#bcccdc;letter-spacing:.01em;
+  stroke:var(--bg-2);stroke-width:4px;paint-order:stroke;transition:fill .15s;
+  text-decoration:underline;text-decoration-color:rgba(188,204,220,.25);text-underline-offset:3px;
+}
+.edge:hover .elabel{fill:var(--ink-bright);text-decoration-color:rgba(255,255,255,.4)}
+.edge.on .elabel{fill:var(--accent)}
+.cross{stroke:var(--ink-faint);stroke-width:1;fill:none}
+.leg-label{font-family:var(--mono);font-size:14px;fill:var(--ink);letter-spacing:.03em}
+/* detail tooltip */
+.dia-tip{
+  position:absolute;width:280px;max-width:84vw;z-index:6;display:none;
+  background:rgba(13,27,42,.97);border:1px solid var(--accent);
+  box-shadow:0 12px 34px rgba(0,0,0,.5);padding:.85rem .95rem;
+}
+.dia-tip.show{display:block}
+.dia-tip-head{display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem;margin-bottom:.5rem}
+.dia-tip-title{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.dia-tip-close{background:none;border:none;color:var(--ink-mute);cursor:pointer;font-size:1.15rem;line-height:1;padding:0}
+.dia-tip-close:hover{color:var(--ink-bright)}
+.dia-tip p{margin:0;font-size:.86rem;line-height:1.5;color:var(--ink)}
+
+/* prominentes "produktiv im Einsatz"-Badge + Caption */
+.fig-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);background:var(--accent-soft);
+  border:1px solid var(--accent);padding:.32rem .7rem;font-weight:600;
+}
+.fig-badge::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 9px var(--accent);animation:pulse 1.8s infinite}
+.figure-foot{
+  margin-top:.9rem;padding-top:.8rem;border-top:1px solid var(--line-soft);
+  font-family:var(--mono);font-size:.78rem;letter-spacing:.05em;color:var(--ink);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem;
+}
+.figure-foot b{color:var(--ink-bright);font-weight:500}
+.click-hint{
+  display:inline-flex;align-items:center;gap:.4rem;
+  color:var(--accent);font-weight:600;font-size:.76rem;letter-spacing:.08em;
+  background:var(--accent-soft);border:1px solid var(--accent);padding:.3rem .7rem;
+  animation:hint-pulse 2.5s ease-in-out infinite;
+}
+@keyframes hint-pulse{
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(238,168,60,0)}
+  50%{opacity:.85;box-shadow:0 0 12px rgba(238,168,60,.25)}
+}
+
+/* ---------- Vorteile der Architektur ---------- */
+.vorteile{margin-top:3rem}
+.vorteile-label{
+  font-family:var(--mono);font-size:.88rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1.6rem;font-weight:600;
+}
+.vorteile-grid{display:grid;grid-template-columns:.62fr 1fr;gap:2.6rem;align-items:start}
+.vorteile-photo{position:relative}
+.vorteile-photo img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center 18%;display:block;filter:grayscale(.3) contrast(1.05)}
+.vorteile-photo .frame-tag{
+  position:absolute;top:-1px;left:-1px;font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;
+  background:var(--blue);color:#0a141f;padding:.25rem .55rem;font-weight:600;
+}
+.vorteile-list{display:flex;flex-direction:column;gap:0}
+.vorteil{
+  display:grid;grid-template-columns:auto 1fr;gap:1.2rem;
+  padding:1.3rem 0;border-bottom:1px solid var(--line-soft);
+}
+.vorteil:first-child{padding-top:0}
+.vorteil:last-child{border-bottom:none}
+.vorteil-num{font-family:var(--mono);font-size:1.5rem;color:var(--accent);font-weight:500;line-height:1}
+.vorteil h4{font-family:var(--display);font-size:1.12rem;font-weight:600;color:var(--ink-bright);margin-bottom:.45rem;letter-spacing:-.01em}
+.vorteil p{font-size:.93rem;color:var(--ink);line-height:1.6}
+@media(max-width:780px){
+  .vorteile-grid{grid-template-columns:1fr;gap:2rem}
+  .vorteile-photo{max-width:320px}
+}
+
+/* ---------- Tech Stack ---------- */
+.case-stack{margin-top:3rem;border:1px solid var(--line);padding:1.6rem 1.8rem}
+.case-stack h4{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1.2rem;font-weight:600;
+}
+.stack-layer{
+  display:grid;grid-template-columns:160px 1fr;gap:1rem;
+  padding:.7rem 0;border-bottom:1px solid var(--line-soft);
+}
+.stack-layer:last-child{border-bottom:none;padding-bottom:0}
+.stack-layer-label{font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);padding-top:.35rem}
+.stack-layer-items{display:flex;flex-wrap:wrap;gap:.45rem}
+.stack-pill{
+  display:inline-flex;align-items:baseline;gap:.4rem;font-size:.78rem;
+  padding:.32rem .68rem;border:1px solid var(--line-soft);background:var(--bg-2);
+  transition:.25s;
+}
+.stack-pill:hover{background:var(--accent-soft);border-color:var(--accent)}
+.stack-pill b{font-family:var(--mono);color:var(--ink-bright);font-size:.74rem;font-weight:500}
+.stack-pill span{color:var(--ink-mute);font-size:.7rem}
+@media(max-width:600px){.stack-layer{grid-template-columns:1fr;gap:.4rem}.stack-layer-label{padding-top:0}}
+
+/* ---------- CV ---------- */
+.cv-meta-block{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  border:1px solid var(--line);margin-bottom:3rem;
+}
+.cv-meta-block>div{padding:1.3rem 1.4rem;border-right:1px solid var(--line-soft)}
+.cv-meta-block>div:last-child{border-right:none}
+.cv-meta-block dt{font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:.5rem}
+.cv-meta-block dd{font-size:1rem;color:var(--ink-bright);font-weight:500}
+.cv-meta-block dd small{display:block;font-size:.74rem;color:var(--ink-mute);font-weight:400;margin-top:.2rem;letter-spacing:0}
+@media(max-width:780px){.cv-meta-block{grid-template-columns:repeat(2,1fr)}.cv-meta-block>div:nth-child(2){border-right:none}}
+@media(max-width:460px){.cv-meta-block{grid-template-columns:1fr}.cv-meta-block>div{border-right:none;border-bottom:1px solid var(--line-soft)}}
+
+.cv-body{display:grid;gap:3rem}
+@media(max-width:820px){.cv-body{grid-template-columns:1fr!important}}
+.cv-section-label{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1.4rem;padding-bottom:.6rem;border-bottom:1px solid var(--line);
+}
+.cv-timeline-section+.cv-timeline-section{margin-top:2.6rem}
+.cv-timeline-list{display:flex;flex-direction:column;gap:0}
+.cv-entry{
+  padding:1.3rem 0 1.3rem 1.6rem;border-left:1px solid var(--line-soft);position:relative;
+  opacity:0;transform:translateY(12px);transition:.55s;
+}
+.cv-entry.in{opacity:1;transform:none}
+.cv-entry::before{
+  content:"";position:absolute;left:-4px;top:1.7rem;width:7px;height:7px;
+  background:var(--bg);border:1.5px solid var(--ink-faint);border-radius:50%;
+}
+.cv-entry.current::before{background:var(--accent);border-color:var(--accent);box-shadow:0 0 9px var(--accent)}
+.cv-entry-head{display:flex;align-items:center;gap:.8rem;margin-bottom:.4rem}
+.cv-year{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em;color:var(--ink-mute)}
+.cv-current-tag{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);padding:.1rem .45rem;
+}
+.cv-role{font-family:var(--display);font-size:1.1rem;font-weight:600;color:var(--ink-bright);line-height:1.2}
+.cv-company{font-size:.86rem;color:var(--ink-mute);margin-top:.15rem}
+.cv-company b{color:var(--blue);font-weight:600}
+.cv-desc{font-size:.9rem;color:var(--ink);margin-top:.6rem;max-width:42em}
+
+/* ---------- CONTACT ---------- */
+.contact-wrap{padding-top:5.5rem;padding-bottom:5rem}
+.contact-inner{
+  display:grid;grid-template-columns:.65fr 1fr;gap:3.5rem;align-items:start;
+}
+.contact-photo-wrap{position:relative}
+.contact-photo{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center 20%;display:block;filter:grayscale(.3) contrast(1.04)}
+.contact-badge{
+  position:absolute;bottom:-1px;left:-1px;font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;
+  background:var(--accent);color:#0a141f;padding:.35rem .7rem;font-weight:600;display:flex;align-items:center;gap:.4rem;
+}
+.contact-badge::before{content:"";width:6px;height:6px;background:#0a141f;border-radius:50%;animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.contact h2{font-family:var(--display);font-weight:600;font-size:clamp(2rem,4vw,3rem);line-height:1.05;letter-spacing:-.02em;color:var(--ink-bright)}
+.contact-sub{margin:1.1rem 0 1.8rem;color:var(--ink);max-width:34em}
+.contact-linkedin{
+  display:inline-flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.78rem;letter-spacing:.04em;
+  color:var(--ink-bright);border:1px solid var(--line);padding:.7rem 1.1rem;margin-bottom:2rem;transition:.25s;
+}
+.contact-linkedin:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.contact-linkedin svg{width:17px;height:17px;fill:currentColor}
+.contact-form{display:flex;flex-direction:column;gap:1rem;max-width:520px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:520px){.form-row{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:.4rem}
+.form-group label{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute)}
+.form-group input,.form-group textarea{
+  font-family:var(--sans);font-size:.92rem;color:var(--ink-bright);
+  background:var(--bg-2);border:1px solid var(--line-soft);padding:.7rem .8rem;transition:.2s;
+}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);background:var(--panel)}
+.form-group textarea{min-height:120px;resize:vertical}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--ink-faint)}
+.form-btn{
+  font-family:var(--mono);font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;
+  background:var(--accent);color:#0a141f;border:none;padding:.85rem 1.4rem;font-weight:600;transition:.2s;margin-top:.4rem;
+}
+.form-btn:hover{background:var(--accent-bright)}
+.form-success{display:none;color:var(--accent-bright);font-family:var(--mono);font-size:.9rem;padding:1rem 0}
+@media(max-width:780px){.contact-inner{grid-template-columns:1fr;gap:2.5rem}.contact-photo-wrap{max-width:300px}}
+
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--line-soft);margin-top:2rem}
+.foot-inner{
+  max-width:var(--maxw);margin:0 auto;padding:1.8rem 2rem;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--ink-faint);
+}
+.foot-name{color:var(--ink-mute)}
+@media(max-width:520px){.foot-inner{flex-direction:column;gap:.6rem;text-align:center}}
+.lang-switch{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
+  color:var(--ink-mute);border:1px solid var(--line);
+  padding:.3rem .55rem;transition:.2s;margin-left:.4rem;
+}
+.lang-switch:hover{color:var(--accent);border-color:var(--accent)}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-brand">Henning Sanders</a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#case">Reference</a>
+      <a href="#cv">Resume</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="index.html" class="lang-switch" title="Deutsche Version">DE</a>
+  </div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-text">
+
+
+    <h1>Hi, I'm Henning –<br><em>your partner for modern SAP architectures in retail.</em></h1>
+
+    <p class="hero-intro">
+      Not a big consultancy — one person who thinks and delivers end-to-end. Live in production at one of Europe's first <strong>OMF/OMSA customers</strong>: proof that modern SAP cloud works today.
+    </p>
+
+
+  </div>
+
+  <div class="hero-image tech-frame">
+    <span class="frame-tag">PORTRAIT_01</span>
+    <img src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/hero-dsag.jpg" alt="Henning Sanders on the DSAG stage" loading="lazy">
+    <div class="caption">Henning · DSAG 2025</div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sec-head">
+    <span class="kicker">§ 01 / Profile</span>
+    <h2 class="section-h">What I bring — <em>and how I work.</em></h2>
+  </div>
+
+  <div class="ability-tabs" role="tablist">
+    <button class="ability-tab active" role="tab" aria-selected="true" data-target="panel-mitbringe">
+      <span class="ability-tab-num">01 — Tech</span>
+      <span class="ability-tab-label">What I bring</span>
+    </button>
+    <button class="ability-tab" role="tab" aria-selected="false" data-target="panel-arbeit">
+      <span class="ability-tab-num">02 — Approach</span>
+      <span class="ability-tab-label">How I work</span>
+    </button>
+  </div>
+
+  <!-- Panel 1 -->
+  <div class="ability-panel active" id="panel-mitbringe" role="tabpanel">
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">01</span>
+        <span class="ability-row-cat">Industry Solutions</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>OMF, OMSA, OPPS, OSTA</h4>
+        <p>SAP's latest industry solutions — extensive implementation experience from productive use at a leading sports retailer, plus close, long-standing relationships with the product owners at SAP.</p>
+        <div class="tags"><span>OMF</span><span>OMSA</span><span>OPPS</span><span>OSTA</span></div>
+      </div>
+    </article>
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">02</span>
+        <span class="ability-row-cat">Event-based Architecture</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>Integration Suite, Event Mesh &amp; Event Hub</h4>
+        <p>Deep knowledge of event-based architecture in the SAP ecosystem — implemented with Integration Suite and Event Mesh / Event Hub.</p>
+        <div class="tags"><span>Integration Suite</span><span>Event Mesh</span><span>Event Hub</span><span>BTP</span></div>
+      </div>
+    </article>
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">03</span>
+        <span class="ability-row-cat">S/4HANA Retail</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>Deep expertise in SD, POS, interfaces &amp; master data</h4>
+        <p>S/4HANA Retail experience as a consultant, primarily in SD and POS. Strong focus on master data and interfaces to and from S/4.</p>
+        <div class="tags"><span>S/4HANA</span><span>SD</span><span>POS</span><span>Master Data</span><span>Interfaces</span></div>
+      </div>
+    </article>
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">04</span>
+        <span class="ability-row-cat">Motivation</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>No working by the book</h4>
+        <p>System knowledge is available everywhere today — what makes the difference is the drive to build truly great solutions. I don't stop until it's right.</p>
+      </div>
+    </article>
+  </div>
+
+  <!-- Panel 2 -->
+  <div class="ability-panel" id="panel-arbeit" role="tabpanel">
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">01</span>
+        <span class="ability-row-cat">Attitude</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>Approachable and people-oriented</h4>
+        <p>The best results come when people enjoy working together. I always bring a relaxed, positive energy to the team — problems are only solved together.</p>
+      </div>
+    </article>
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">02</span>
+        <span class="ability-row-cat">Method</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>Clear methodology, clear goals</h4>
+        <p>My time in the pharma industry taught me structure — from requirements gathering to go-live. I still rely on those guardrails today.</p>
+      </div>
+    </article>
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">03</span>
+        <span class="ability-row-cat">Pace</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>As efficient as possible</h4>
+        <p>I thrive in small, high-impact teams where everyone is involved. I consistently delegate routine tasks to AI — so we can focus entirely on what matters.</p>
+      </div>
+    </article>
+    <article class="ability-row reveal">
+      <div class="ability-row-meta">
+        <span class="ability-row-num">04</span>
+        <span class="ability-row-cat">Perspective</span>
+      </div>
+      <div class="ability-row-body">
+        <h4>Thinking E2E across system boundaries</h4>
+        <p>I want to design the best end-to-end process — and I immerse myself in every tool, whether SAP or not. “Not an SAP tool, not my problem” doesn’t exist in my vocabulary.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- CASE -->
+<section class="case" id="case">
+  <div class="sec-head">
+    <span class="kicker">§ 02 / Reference</span>
+    <h2 class="section-h">From legacy ERP to <em>cloud architecture.</em></h2>
+  </div>
+
+  <div class="case-intro">
+    <p class="case-body">
+      The client, a leading sports retailer, was running a heavily customized ERP system that had accumulated all business logic over the years. The high level of customization made updates virtually impossible — and much of the knowledge only existed in the heads of individual employees.
+    </p>
+    <button class="case-toggle" id="caseToggle" type="button">Read more <span class="chevron">▾</span></button>
+    <div class="case-more" id="caseMore">
+    <p class="case-body">
+      The strategic decision: a full switch to SAP — with the latest products in both backend and frontend. To implement the rollout of Order Management Foundation, OMSA, Integration Suite, and S/4HANA in a structured way without major complications, we first connected the new frontend to the old backend world and then replaced it step by step. The result: a smooth, well-managed transition.
+    </p>
+    <p class="case-body">
+      At the same time, logic was systematically extracted from the ERP and shifted to the cloud systems — for a lean, maintainable clean core setup. Today, both the approach and the architecture serve as an SAP reference, presented at the DSAG annual conference and the ESUG Onsite.
+    </p>
+    </div>
+  </div>
+
+  <!-- Schematic -->
+  <div class="figure">
+    <div class="figure-head">
+      <span>Fig. 01 — <b>Order-to-Cash Reference Architecture</b></span>
+      <span class="fig-badge">Live in Production</span>
+    </div>
+    <div class="figure-scroll">
+    <svg class="schematic" viewBox="0 0 1460 760" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Order-to-Cash reference architecture around SAP OMF">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="rgba(176,205,232,.85)"/>
+        </marker>
+        <marker id="arrA" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#eea83c"/>
+        </marker>
+      </defs>
+
+      <!-- corner crosses -->
+      <path class="cross" d="M14 14 h12 M20 8 v12"/>
+      <path class="cross" d="M1446 746 h-12 M1440 752 v-12"/>
+
+      <!-- ===== EDGES (klickbar) ===== -->
+
+      <!-- TOP: OMF <-> OMSA -->
+      <g class="edge" data-title="Sourcing (OMF ↔ OMSA)" data-detail="If an order arrives without sourcing — e.g. from marketplaces — SAP OMF can perform sourcing via OMSA to determine the optimal fulfillment source.">
+        <path class="hit" d="M730 300 V128"/>
+        <path class="vis as ae" d="M730 300 V128"/>
+        <text class="elabel" x="772" y="218" text-anchor="start">Sourcing</text>
+      </g>
+
+      <!-- TOP: Frontends <-> OMSA -->
+      <g class="edge" data-title="Sourcing (Frontends ↔ OMSA)" data-detail="Frontend systems can directly query availability from SAP OMSA and, for example, reserve inventory for the customer when adding a product to the cart. This helps prevent overselling.">
+        <path class="hit" d="M1285 190 C1285 112 1000 99 810 99"/>
+        <path class="vis as ae" d="M1285 190 C1285 112 1000 99 810 99"/>
+        <text class="elabel" x="1040" y="112" text-anchor="middle">Sourcing</text>
+      </g>
+
+      <!-- LEFT: CDP -> Emarsys -->
+      <g class="edge" data-title="Activation Emails" data-detail="Based on triggers in the CDP — e.g. a customer has received their goods later than expected for the third time — an automated email campaign can be triggered in Emarsys.">
+        <path class="hit" d="M165 343 V254"/>
+        <path class="vis ae" d="M165 343 V254"/>
+        <text class="elabel" x="165" y="302" text-anchor="middle">Activation Emails</text>
+      </g>
+
+      <!-- LEFT: OMF -> Emarsys -->
+      <g class="edge" data-title="Order-related Emails" data-detail="Based on activities (events) in OMF, order-related notifications are triggered, e.g. the order confirmation. All templates are stored in one place and managed centrally.">
+        <path class="hit" d="M610 335 C470 335 360 222 250 222"/>
+        <path class="vis ae" d="M610 335 C470 335 360 222 250 222"/>
+        <text class="elabel" x="430" y="270" text-anchor="middle">Order-related Emails</text>
+      </g>
+
+      <!-- LEFT: OMF -> CDP -->
+      <g class="edge" data-title="Order Updates to CDP" data-detail="Order status and customer data flow into SAP CDP — for a unified customer profile and personalized experiences across all touchpoints.">
+        <path class="hit" d="M610 375 H250"/>
+        <path class="vis ae" d="M610 375 H250"/>
+        <text class="elabel" x="430" y="367" text-anchor="middle">Customer Order Updates</text>
+      </g>
+
+      <!-- LEFT: OMF -> Service Cloud -->
+      <g class="edge" data-title="To-Dos for Customer Service" data-detail="If our events surface tasks for customer service that should not be automated — e.g. a failed refund — we create tickets directly in SAP Service Cloud.">
+        <path class="hit" d="M610 415 C470 415 360 528 250 528"/>
+        <path class="vis ae" d="M610 415 C470 415 360 528 250 528"/>
+        <text class="elabel" x="430" y="455" text-anchor="middle">To-Dos for</text>
+        <text class="elabel" x="430" y="469" text-anchor="middle">Customer Service</text>
+      </g>
+
+      <!-- RIGHT: OMF -> Webshops (Statusupdates) -->
+      <g class="edge" data-title="Status Updates" data-detail="Since SAP OMF manages all status updates for a sales order, it can push them directly to the frontend systems. There, all information is made available to the customer in their account.">
+        <path class="hit" d="M850 335 C990 335 1100 222 1190 222"/>
+        <path class="vis ae" d="M850 335 C990 335 1100 222 1190 222"/>
+        <text class="elabel" x="1030" y="266" text-anchor="middle">Status Updates</text>
+      </g>
+
+      <!-- RIGHT: Webshops -> OMF (Orders) -->
+      <g class="edge" data-title="Orders" data-detail="Frontend systems submit orders including sourcing and payment information. SAP OMF is the central hub for all sales channels.">
+        <path class="hit" d="M1190 245 C1090 245 990 360 850 360"/>
+        <path class="vis ae" d="M1190 245 C1090 245 990 360 850 360"/>
+        <text class="elabel" x="1030" y="312" text-anchor="middle">Orders</text>
+      </g>
+
+      <!-- RIGHT: Webshops -> PSP (Authorization) -->
+      <g class="edge" data-title="Authorization" data-detail="Payment is authorized by the frontend systems. Only authorized payments enter the OMF ecosystem.">
+        <path class="hit" d="M1285 254 V343"/>
+        <path class="vis ae" d="M1285 254 V343"/>
+        <text class="elabel" x="1285" y="302" text-anchor="middle">Authorization</text>
+      </g>
+
+      <!-- RIGHT: OMF <-> PSP (Payment Captures) -->
+      <g class="edge" data-title="Payment Captures or Refunds" data-detail="Based on events from the ERP system — e.g. invoice or credit note — we call the PSPs to capture or refund payments. This makes us independent of which ERP provides the information.">
+        <path class="hit" d="M850 375 H1190"/>
+        <path class="vis as ae" d="M850 375 H1190"/>
+        <text class="elabel" x="1020" y="367" text-anchor="middle">Payment Captures or Refunds</text>
+      </g>
+
+      <!-- RIGHT: OMF <-> ParcelLab (Outbound Tracking) -->
+      <g class="edge" data-title="Shipment Tracking &amp; Returns" data-detail="Based on tracking label creation, we transmit the information to ParcelLab. From there, the customer receives updates on their shipment status. They can also register a return, which is created via OMF in the corresponding ERP system.">
+        <path class="hit" d="M850 415 C990 415 1100 528 1190 528"/>
+        <path class="vis as ae" d="M850 415 C990 415 1100 528 1190 528"/>
+        <text class="elabel" x="1020" y="455" text-anchor="middle">Shipment Tracking and</text>
+        <text class="elabel" x="1020" y="469" text-anchor="middle">Return Registration</text>
+      </g>
+
+      <!-- BOTTOM: OMF <-> ERPs (fan) -->
+      <g class="edge" data-title="Orders + Status Exchange" data-detail="Based on orchestration rules in SAP OMF, orders are handed over to the ERP system. In return, we receive events from the ERP systems — e.g. quantity reductions or follow-up documents — and then trigger downstream systems from OMF, e.g. PSP or Emarsys.">
+        <path class="hit" d="M690 450 C610 560 560 610 530 610"/>
+        <path class="hit" d="M730 450 V610"/>
+        <path class="hit" d="M770 450 C850 560 900 610 930 610"/>
+        <path class="vis as ae" d="M690 450 C610 560 560 610 530 610"/>
+        <path class="vis as ae" d="M730 450 V610"/>
+        <path class="vis as ae" d="M770 450 C850 560 900 610 930 610"/>
+        <text class="elabel" x="730" y="508" text-anchor="middle">Orders + Status Exchange</text>
+      </g>
+
+      <!-- ===== NODES ===== -->
+      <!-- top center -->
+      <g class="n-sap"><rect x="650" y="70" width="160" height="58"/></g>
+      <text class="n-label" x="730" y="104" text-anchor="middle">SAP OMSA</text>
+
+      <!-- left column -->
+      <g class="n-sap"><rect x="80" y="190" width="170" height="64"/></g>
+      <text class="n-label" x="165" y="227" text-anchor="middle">SAP Emarsys</text>
+
+      <g class="n-sap"><rect x="80" y="343" width="170" height="64"/></g>
+      <text class="n-label" x="165" y="380" text-anchor="middle">SAP CDP</text>
+
+      <g class="n-sap"><rect x="80" y="496" width="170" height="64"/></g>
+      <text class="n-label" x="165" y="523" text-anchor="middle">SAP Service</text>
+      <text class="n-label" x="165" y="541" text-anchor="middle">Cloud</text>
+
+      <!-- center hub -->
+      <g class="n-sap"><rect x="610" y="300" width="240" height="150"/></g>
+      <text class="n-label big" x="730" y="383" text-anchor="middle">SAP OMF</text>
+
+      <!-- right column -->
+      <g class="n-sap"><rect x="1190" y="190" width="190" height="64"/></g>
+      <text class="n-label" x="1285" y="216" text-anchor="middle">Webshops / Apps /</text>
+      <text class="n-label" x="1285" y="234" text-anchor="middle">Marketplaces</text>
+
+      <g class="n-ext"><rect x="1190" y="343" width="190" height="64"/></g>
+      <text class="n-label" x="1285" y="368" text-anchor="middle">Payment Service</text>
+      <text class="n-label" x="1285" y="386" text-anchor="middle">Provider</text>
+
+      <g class="n-ext"><rect x="1190" y="496" width="190" height="64"/></g>
+      <text class="n-label" x="1285" y="533" text-anchor="middle">ParcelLab</text>
+
+      <!-- bottom row -->
+      <g class="n-ext"><rect x="455" y="610" width="150" height="58"/></g>
+      <text class="n-label" x="530" y="644" text-anchor="middle">Legacy ERP</text>
+
+      <g class="n-sap"><rect x="655" y="610" width="150" height="58"/></g>
+      <text class="n-label" x="730" y="644" text-anchor="middle">SAP S/4</text>
+
+      <g class="n-ext"><rect x="855" y="610" width="150" height="58"/></g>
+      <text class="n-label" x="930" y="644" text-anchor="middle">Dropshipper</text>
+
+      <!-- ===== LEGEND ===== -->
+      <g class="n-sap"><rect x="20" y="706" width="18" height="18"/></g>
+      <text class="leg-label" x="46" y="719">SAP System</text>
+      <g class="n-ext"><rect x="250" y="706" width="18" height="18"/></g>
+      <text class="leg-label" x="276" y="719">Non-SAP System</text>
+    </svg>
+    </div>
+
+    <!-- Mobile Architecture Journey (Swipe) — hidden on desktop -->
+    <div class="arch-journey" id="archJourney">
+      <div class="aj-intro">Order Lifecycle &middot; swipe through</div>
+      <div class="aj-legend">
+        <span><span class="aj-leg-sap"></span>SAP System</span>
+        <span><span class="aj-leg-ext"></span>Non-SAP</span>
+      </div>
+
+      <div class="aj-track" id="ajTrack">
+
+        <!-- ── Station 1: Auftragserfassung ── -->
+        <article class="aj-card">
+          <div class="aj-card-head">
+            <span class="aj-num">01 / 05</span>
+            <h3 class="aj-title">Order Capture</h3>
+          </div>
+          <div class="aj-diagram">
+            <svg viewBox="0 0 300 212" xmlns="http://www.w3.org/2000/svg" aria-label="Order Capture">
+              <defs><marker id="ajH1" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse"><path d="M0 0 L7 3.5 L0 7 z" fill="rgba(176,205,232,.7)"/></marker></defs>
+              <!-- Kanal → PSP -->
+              <path class="jedge" d="M142 31 H192" marker-end="url(#ajH1)"/>
+              <text class="jelabel" x="167" y="24" text-anchor="middle">Auth</text>
+              <!-- Kanal → OMF -->
+              <path class="jedge" d="M78 60 V152" marker-end="url(#ajH1)"/>
+              <text class="jelabel" x="86" y="110" text-anchor="start">Order</text>
+              <!-- Kanal → OMSA (Kanal kann sourcen) -->
+              <path class="jedge" d="M130 58 L192 104" marker-end="url(#ajH1)"/>
+              <!-- OMF → OMSA (OMF kann sourcen) -->
+              <path class="jedge" d="M130 156 L192 132" marker-end="url(#ajH1)"/>
+              <text class="jelabel" x="188" y="121" text-anchor="end">Sourcing</text>
+              <!-- Kanal -->
+              <g class="jn-ext"><rect x="14" y="14" width="128" height="46" rx="4"/></g>
+              <text class="jlabel" x="78" y="34" text-anchor="middle">Channel</text>
+              <text class="jsub" x="78" y="49" text-anchor="middle">Web &middot; App &middot; Market</text>
+              <!-- PSP -->
+              <g class="jn-ext"><rect x="192" y="14" width="94" height="46" rx="4"/></g>
+              <text class="jlabel" x="239" y="42" text-anchor="middle">PSP</text>
+              <!-- OMSA -->
+              <g class="jn-sap"><rect x="192" y="96" width="94" height="44" rx="4"/></g>
+              <text class="jlabel" x="239" y="123" text-anchor="middle">OMSA</text>
+              <!-- OMF -->
+              <g class="jn-omf"><rect x="14" y="152" width="128" height="48" rx="4"/></g>
+              <text class="jlabel" x="78" y="181" text-anchor="middle" style="font-weight:600">SAP OMF</text>
+            </svg>
+          </div>
+          <p class="aj-text">Orders can come from <b>any channel</b> — webshop, app, or marketplace. Sourcing runs via <b>OMSA</b>, payment authorization goes directly from the channel to the PSP. Once complete, the channel hands the order to OMF — if sourcing is missing, OMF takes over.</p>
+        </article>
+
+        <!-- ── Station 2: Kundenkommunikation ── -->
+        <article class="aj-card">
+          <div class="aj-card-head">
+            <span class="aj-num">02 / 05</span>
+            <h3 class="aj-title">Customer Communication</h3>
+          </div>
+          <div class="aj-diagram">
+            <svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg" aria-label="Customer Communication">
+              <defs><marker id="ajH2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse"><path d="M0 0 L7 3.5 L0 7 z" fill="rgba(176,205,232,.7)"/></marker></defs>
+              <!-- Verkaufskanal → OMF -->
+              <path class="jedge" d="M68 56 V92" marker-end="url(#ajH2)" stroke-dasharray="3 3"/>
+              <!-- OMF → Emarsys -->
+              <path class="jedge" d="M128 108 L172 50" marker-end="url(#ajH2)"/>
+              <text class="jelabel" x="146" y="74" text-anchor="middle">Emails</text>
+              <!-- OMF → CDP -->
+              <path class="jedge" d="M128 126 L172 130" marker-end="url(#ajH2)"/>
+              <text class="jelabel" x="150" y="120" text-anchor="middle">Profile</text>
+              <!-- Verkaufskanal (dashed input) -->
+              <g><rect x="6" y="12" width="124" height="44" rx="4" fill="none" stroke="var(--blue)" stroke-width="1.3" stroke-dasharray="4 3"/></g>
+              <text class="jlabel" x="68" y="31" text-anchor="middle" style="font-size:10.5px;fill:var(--ink)">new sales channel</text>
+              <text class="jsub" x="68" y="45" text-anchor="middle" style="font-size:8px">no custom interfaces needed</text>
+              <!-- OMF -->
+              <g class="jn-omf"><rect x="10" y="92" width="118" height="50" rx="4"/></g>
+              <text class="jlabel" x="69" y="122" text-anchor="middle" style="font-weight:600">SAP OMF</text>
+              <!-- Emarsys -->
+              <g class="jn-sap"><rect x="172" y="28" width="116" height="44" rx="4"/></g>
+              <text class="jlabel" x="230" y="48" text-anchor="middle">Emarsys</text>
+              <text class="jsub" x="230" y="62" text-anchor="middle">Order Confirmation</text>
+              <!-- CDP -->
+              <g class="jn-sap"><rect x="172" y="108" width="116" height="44" rx="4"/></g>
+              <text class="jlabel" x="230" y="128" text-anchor="middle">SAP CDP</text>
+              <text class="jsub" x="230" y="142" text-anchor="middle">Customer Profile</text>
+            </svg>
+          </div>
+          <p class="aj-text">All CX components are <b>centrally</b> controlled from OMF: order-related emails like confirmations via Emarsys, profile updates to the CDP. This means there is only <b>one place</b> where updates happen — and new <b>sales channels</b> don't need to build their own interfaces to these systems, they simply connect to OMF.</p>
+        </article>
+
+        <!-- ── Station 3: Orchestrierung ── -->
+        <article class="aj-card">
+          <div class="aj-card-head">
+            <span class="aj-num">03 / 05</span>
+            <h3 class="aj-title">Orchestration</h3>
+          </div>
+          <div class="aj-diagram">
+            <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" aria-label="Orchestration">
+              <defs><marker id="ajH3" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse"><path d="M0 0 L7 3.5 L0 7 z" fill="rgba(176,205,232,.7)"/></marker></defs>
+              <!-- OMF down to junction, then branch to 3 ERPs -->
+              <path class="jedge" d="M150 60 V92"/>
+              <path class="jedge" d="M150 92 L52 136" marker-end="url(#ajH3)"/>
+              <path class="jedge" d="M150 92 V136" marker-end="url(#ajH3)"/>
+              <path class="jedge" d="M150 92 L248 136" marker-end="url(#ajH3)"/>
+              <text class="jelabel" x="168" y="112" text-anchor="start">Rules</text>
+              <!-- OMF -->
+              <g class="jn-omf"><rect x="90" y="12" width="120" height="46" rx="4"/></g>
+              <text class="jlabel" x="150" y="40" text-anchor="middle" style="font-weight:600">SAP OMF</text>
+              <!-- ERPs -->
+              <g class="jn-ext"><rect x="8" y="138" width="88" height="46" rx="4"/></g>
+              <text class="jlabel" x="52" y="160" text-anchor="middle" style="font-size:11px">Legacy</text>
+              <text class="jsub" x="52" y="173" text-anchor="middle">ERP</text>
+              <g class="jn-sap"><rect x="106" y="138" width="88" height="46" rx="4"/></g>
+              <text class="jlabel" x="150" y="160" text-anchor="middle" style="font-size:11px">SAP S/4</text>
+              <text class="jsub" x="150" y="173" text-anchor="middle">HANA</text>
+              <g class="jn-ext"><rect x="204" y="138" width="88" height="46" rx="4"/></g>
+              <text class="jlabel" x="248" y="160" text-anchor="middle" style="font-size:11px">Drop-</text>
+              <text class="jsub" x="248" y="173" text-anchor="middle">shipper</text>
+            </svg>
+          </div>
+          <p class="aj-text">OMF decides <b>rule-based</b> which ERP an order is orchestrated to. This makes the setup extremely flexible: ERP systems can be swapped or added without touching the surrounding processes.</p>
+        </article>
+
+        <!-- ── Station 4: Statusupdates ── -->
+        <article class="aj-card">
+          <div class="aj-card-head">
+            <span class="aj-num">04 / 05</span>
+            <h3 class="aj-title">Status Updates</h3>
+          </div>
+          <div class="aj-diagram">
+            <svg viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg" aria-label="Status Updates">
+              <defs><marker id="ajH4" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse"><path d="M0 0 L7 3.5 L0 7 z" fill="rgba(176,205,232,.7)"/></marker></defs>
+              <!-- inbound: ERP / PSP / ParcelLab → OMF -->
+              <path class="jedge" d="M94 52 L120 105" marker-end="url(#ajH4)"/>
+              <path class="jedge" d="M94 125 H120" marker-end="url(#ajH4)"/>
+              <path class="jedge" d="M94 198 L120 145" marker-end="url(#ajH4)"/>
+              <!-- outbound: OMF → Emarsys / CDP / Service Cloud -->
+              <path class="jedge" d="M190 105 L214 52" marker-end="url(#ajH4)"/>
+              <path class="jedge" d="M190 125 H214" marker-end="url(#ajH4)"/>
+              <path class="jedge" d="M190 145 L214 198" marker-end="url(#ajH4)"/>
+              <!-- inbound nodes -->
+              <g class="jn-sap"><rect x="8" y="30" width="86" height="44" rx="4"/></g>
+              <text class="jlabel" x="51" y="49" text-anchor="middle" style="font-size:11px">ERP</text>
+              <text class="jsub" x="51" y="62" text-anchor="middle">Lifecycle</text>
+              <g class="jn-ext"><rect x="8" y="103" width="86" height="44" rx="4"/></g>
+              <text class="jlabel" x="51" y="122" text-anchor="middle" style="font-size:11px">PSP</text>
+              <text class="jsub" x="51" y="135" text-anchor="middle">Payment Status</text>
+              <g class="jn-ext"><rect x="8" y="176" width="86" height="44" rx="4"/></g>
+              <text class="jlabel" x="51" y="195" text-anchor="middle" style="font-size:11px">ParcelLab</text>
+              <text class="jsub" x="51" y="208" text-anchor="middle">Shipment Status</text>
+              <!-- OMF hub -->
+              <g class="jn-omf"><rect x="120" y="88" width="70" height="74" rx="4"/></g>
+              <text class="jlabel" x="155" y="121" text-anchor="middle" style="font-weight:600">SAP OMF</text>
+              <text class="jsub" x="155" y="135" text-anchor="middle">Full View</text>
+              <!-- outbound nodes -->
+              <g class="jn-sap"><rect x="214" y="30" width="78" height="44" rx="4"/></g>
+              <text class="jlabel" x="253" y="49" text-anchor="middle" style="font-size:11px">Emarsys</text>
+              <text class="jsub" x="253" y="62" text-anchor="middle">Customer Emails</text>
+              <g class="jn-sap"><rect x="214" y="103" width="78" height="44" rx="4"/></g>
+              <text class="jlabel" x="253" y="122" text-anchor="middle" style="font-size:11px">SAP CDP</text>
+              <text class="jsub" x="253" y="135" text-anchor="middle">Push</text>
+              <g class="jn-sap"><rect x="214" y="176" width="78" height="44" rx="4"/></g>
+              <text class="jlabel" x="253" y="195" text-anchor="middle" style="font-size:9.5px">Service Cloud</text>
+              <text class="jsub" x="253" y="208" text-anchor="middle">on Errors</text>
+            </svg>
+          </div>
+          <p class="aj-text">All lifecycle updates converge in OMF: <b>shipment status</b> from ParcelLab, <b>payment status</b> from the PSP, and further events from the ERP systems. OMF is thus the central point for a complete overview. Customer notifications run via <b>Emarsys</b>, updates flow to the CDP — and errors are turned into tickets in the <b>Service Cloud</b>.</p>
+        </article>
+
+        <!-- ── Station 5: Versand & Retouren ── -->
+        <article class="aj-card">
+          <div class="aj-card-head">
+            <span class="aj-num">05 / 05</span>
+            <h3 class="aj-title">Shipping &amp; Returns</h3>
+          </div>
+          <div class="aj-diagram">
+            <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" aria-label="Shipping and Returns">
+              <defs><marker id="ajH5" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse"><path d="M0 0 L7 3.5 L0 7 z" fill="rgba(176,205,232,.7)"/></marker></defs>
+              <!-- ParcelLab ↔ OMF -->
+              <path class="jedge" d="M150 52 V88" marker-end="url(#ajH5)" marker-start="url(#ajH5)"/>
+              <text class="jelabel" x="158" y="74" text-anchor="start">Tracking</text>
+              <!-- OMF → ERP -->
+              <path class="jedge" d="M133 138 L70 168" marker-end="url(#ajH5)"/>
+              <text class="jelabel" x="78" y="150" text-anchor="end">Retoure</text>
+              <!-- OMF → PSP -->
+              <path class="jedge" d="M167 138 L230 168" marker-end="url(#ajH5)"/>
+              <text class="jelabel" x="222" y="150" text-anchor="start">Refund</text>
+              <!-- ParcelLab -->
+              <g class="jn-ext"><rect x="93" y="10" width="114" height="42" rx="4"/></g>
+              <text class="jlabel" x="150" y="29" text-anchor="middle">ParcelLab</text>
+              <text class="jsub" x="150" y="43" text-anchor="middle">Tracking · Returns</text>
+              <!-- OMF -->
+              <g class="jn-omf"><rect x="103" y="90" width="94" height="48" rx="4"/></g>
+              <text class="jlabel" x="150" y="119" text-anchor="middle" style="font-weight:600">SAP OMF</text>
+              <!-- ERP -->
+              <g class="jn-sap"><rect x="8" y="170" width="112" height="44" rx="4"/></g>
+              <text class="jlabel" x="64" y="190" text-anchor="middle" style="font-size:11px">ERP</text>
+              <text class="jsub" x="64" y="203" text-anchor="middle">Return Order</text>
+              <!-- PSP -->
+              <g class="jn-ext"><rect x="180" y="170" width="112" height="44" rx="4"/></g>
+              <text class="jlabel" x="236" y="190" text-anchor="middle" style="font-size:11px">PSP</text>
+              <text class="jsub" x="236" y="203" text-anchor="middle">Refund</text>
+            </svg>
+          </div>
+          <p class="aj-text">Outbound shipments are tracked and returns are registered via <b>ParcelLab</b>. OMF creates the <b>return order</b> in the appropriate ERP — and after the credit note, calls the PSP again to trigger the refund.</p>
+        </article>
+
+      </div>
+
+      <!-- Navigation -->
+      <div class="aj-nav">
+        <button class="aj-arrow" id="ajPrev" type="button" aria-label="Previous" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="aj-dots" id="ajDots"></div>
+        <button class="aj-arrow" id="ajNext" type="button" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Detail-Tooltip -->
+    <div class="dia-tip" id="diaTip">
+      <div class="dia-tip-head">
+        <span class="dia-tip-title"></span>
+        <button class="dia-tip-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <p></p>
+    </div>
+
+    <div class="figure-foot">
+      <b>Live in production</b> at a leading sports retailer — presented by SAP as a reference (DSAG Annual Conference &amp; ESUG Onsite).
+      <span class="click-hint">👆 Click arrows for details</span>
+    </div>
+  </div>
+
+  <!-- Vorteile der Architektur -->
+  <div class="vorteile">
+    <div class="vorteile-label">Benefits of the Architecture</div>
+    <div class="vorteile-grid">
+      <div class="vorteile-photo tech-frame">
+        <span class="frame-tag">FIELD_02</span>
+        <img src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/191%20-%20Bernd%20Alsleben%20%28193%20von%20796%29.jpg" alt="Henning Sanders presenting the architecture" loading="lazy">
+      </div>
+      <div class="vorteile-list">
+        <div class="vorteil reveal">
+          <span class="vorteil-num">01</span>
+          <div>
+            <h4>Clean Core — logic out of the ERP</h4>
+            <p>Significant business logic is extracted from the ERP and shifted to cloud systems. The ERP stays lean, making it far more maintainable and upgrade-ready.</p>
+          </div>
+        </div>
+        <div class="vorteil reveal">
+          <span class="vorteil-num">02</span>
+          <div>
+            <h4>New frontend channels in minutes</h4>
+            <p>New webshops, apps, or marketplaces only need to connect to OMF — from there, all downstream logic is managed centrally. This makes onboarding new channels extremely simple.</p>
+          </div>
+        </div>
+        <div class="vorteil reveal">
+          <span class="vorteil-num">03</span>
+          <div>
+            <h4>ERP systems are interchangeable</h4>
+            <p>Since OMF holds the central logic, ERP systems can be swapped without touching the orchestration. New dropshippers or a new ERP can be onboarded quickly.</p>
+          </div>
+        </div>
+        <div class="vorteil reveal">
+          <span class="vorteil-num">04</span>
+          <div>
+            <h4>Complete order visibility in SAP OMF</h4>
+            <p>The order-to-refund process involves many systems — some without direct access, like a dropshipper's ERP. Maintaining a full overview of an order is challenging but critical: for supporting customer inquiries and ensuring a consistent CX journey. OMF serves as the central collection point for all updates — from ERP systems, shipping providers, and payment service providers — making the complete order status visible in one place.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- CV -->
+<section id="cv">
+  <div class="sec-head">
+    <span class="kicker">§ 03 / Career</span>
+    <h2 class="section-h">What I've <em>experienced so far.</em></h2>
+  </div>
+
+  <dl class="cv-meta-block">
+    <div>
+      <dt>Position</dt>
+      <dd>Solution Architect <small>SAP BTP · Cloud · Order-to-Cash</small></dd>
+    </div>
+    <div>
+      <dt>Location</dt>
+      <dd>Leipzig <small>Germany · available worldwide</small></dd>
+    </div>
+    <div>
+      <dt>Languages</dt>
+      <dd>DE · EN <small>Native · C2 (studied in UK)</small></dd>
+    </div>
+    <div>
+      <dt>Certifications</dt>
+      <dd>IPMA · SAP Activate <small>Project management certified</small></dd>
+    </div>
+  </dl>
+
+  <div class="cv-body" style="grid-template-columns:1.4fr 1fr">
+    <!-- LINKS -->
+    <div class="cv-timeline-col">
+      <div class="cv-timeline-section">
+        <div class="cv-section-label">Professional Experience</div>
+        <div class="cv-timeline-list">
+
+          <div class="cv-entry current reveal">
+            <div class="cv-entry-head">
+              <span class="cv-year">09/2023 — present</span>
+              <span class="cv-current-tag">Current</span>
+            </div>
+            <div class="cv-role">Consultant · Solution Architect</div>
+            <div class="cv-company"><b>RBOmnishore</b> · Sports &amp; Non-Food Retail</div>
+            <p class="cv-desc">E2E Order-to-Cash at a leading sports retailer: migration to an event-based clean core architecture with OMF, OMSA, CPI &amp; BTP. Built up to an SAP reference architecture, presented at SAP conferences.</p>
+          </div>
+
+          <div class="cv-entry reveal">
+            <div class="cv-entry-head">
+              <span class="cv-year">08/2022 — 09/2023</span>
+            </div>
+            <div class="cv-role">Founder &amp; Managing Director</div>
+            <div class="cv-company"><b>Feel le Tour</b> / <b>KUNEGO</b> · Leipzig</div>
+            <p class="cv-desc">Founded two start-ups; marketing, sales, legal, and process design under full ownership.</p>
+          </div>
+
+          <div class="cv-entry reveal">
+            <div class="cv-entry-head">
+              <span class="cv-year">10/2020 — 08/2022</span>
+            </div>
+            <div class="cv-role">Functional Consultant · Pharma</div>
+            <div class="cv-company"><b>Movilitas Consulting</b> · Mannheim</div>
+            <p class="cv-desc">Solution Architect &amp; Project Manager in international pharma serialization projects (SAP, Tracelink).</p>
+          </div>
+
+          <div class="cv-entry reveal">
+            <div class="cv-entry-head">
+              <span class="cv-year">08/2021 — 08/2022</span>
+            </div>
+            <div class="cv-role">Implementation Manager · USA</div>
+            <div class="cv-company"><b>Arvato Supply Chain Solutions</b> · Memphis</div>
+            <p class="cv-desc">Setup of a new SAP-managed warehouse in Memphis. Project management, process design, go-live planning in 3PL.</p>
+          </div>
+
+          <div class="cv-entry reveal">
+            <div class="cv-entry-head">
+              <span class="cv-year">09/2018 — 09/2020</span>
+            </div>
+            <div class="cv-role">Project Manager · 3PL Logistics</div>
+            <div class="cv-company"><b>Arvato Supply Chain Solutions</b> · Deutschland</div>
+            <p class="cv-desc">Led multiple international 3PL logistics projects with teams of up to 15 people.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- RECHTS -->
+    <div class="cv-timeline-col">
+      <div class="cv-timeline-section">
+        <div class="cv-section-label">Education</div>
+        <div class="cv-timeline-list">
+          <div class="cv-entry reveal">
+            <div class="cv-entry-head">
+              <span class="cv-year">2015 — 2018</span>
+            </div>
+            <div class="cv-role">BSc Business Management · 1,0 First Class Honours</div>
+            <div class="cv-company"><b>Oxford Brookes University</b> · UK</div>
+            <p class="cv-desc">Strategy, marketing, finance, operations. Supply chain internship at a premium car manufacturer, Oxford.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cv-timeline-section">
+        <div class="cv-section-label">Personal</div>
+        <div class="cv-timeline-list">
+          <div class="cv-entry reveal">
+            <div class="cv-entry-head">
+              <span class="cv-year">2026</span>
+            </div>
+            <div class="cv-role">Ironman 70.3 · Neuseenman</div>
+            <div class="cv-company"><b>1,9 km</b> Schwimmen · 90 km Rad · 21,1 km Lauf</div>
+            <p class="cv-desc">One of my toughest but best experiences — the closing half marathon really hurt.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<div class="contact-wrap" id="contact">
+  <div class="block">
+    <div class="sec-head">
+      <span class="kicker">§ 04 / Contact</span>
+      <h2 class="section-h">Let's <em>talk.</em></h2>
+    </div>
+    <div class="contact-inner">
+      <div class="contact-photo-wrap tech-frame">
+        <img class="contact-photo" src="https://raw.githubusercontent.com/HenningSanders/Webseite/main/320%20-%20Bernd%20Alsleben%20%28322%20von%20796%29.jpg" alt="Henning Sanders" loading="lazy">
+        <div class="contact-badge">Open for Projects</div>
+      </div>
+
+      <div class="contact">
+        <p class="contact-sub">
+          New projects, exciting architecture questions, or just a quick chat — I look forward to hearing from you.
+        </p>
+
+        <a href="https://www.linkedin.com/in/henning-sanders-522b1a120/" target="_blank" rel="noopener" class="contact-linkedin">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          Connect on LinkedIn
+        </a>
+
+        <form class="contact-form" id="contactForm" action="https://formspree.io/f/xrevbeqo" method="POST" onsubmit="submitForm(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="john@company.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="Project inquiry / Architecture consulting">
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Brief description of your request…" required></textarea>
+          </div>
+          <button type="submit" class="form-btn">Send Message</button>
+        </form>
+        <div class="form-success" id="formSuccess">
+          Thanks — I'll get back to you as soon as possible. 👋
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <span class="foot-name">Henning Sanders</span>
+    <span>© 2026 · Solution Architect · Leipzig</span>
+    <span style="font-family:var(--mono);font-size:.68rem;letter-spacing:.06em"><a href="legal.html" style="color:var(--ink-mute);text-decoration:none">Legal Notice</a> · <a href="privacy.html" style="color:var(--ink-mute);text-decoration:none">Privacy Policy</a></span>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        const el = e.target;
+        const parent = el.parentElement;
+        const siblings = Array.from(parent.children).filter(c => c.classList.contains('reveal'));
+        let delay = 0;
+        siblings.forEach((s, idx) => { if (s === el) delay = idx * 90; });
+        setTimeout(() => el.classList.add('in'), delay);
+        io.unobserve(el);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal, .cv-entry').forEach(el => io.observe(el));
+
+  function submitForm(e){
+    e.preventDefault();
+    const form = document.getElementById('contactForm');
+    const btn = form.querySelector('.form-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(function(r){
+      if(r.ok){
+        form.style.display = 'none';
+        document.getElementById('formSuccess').style.display = 'block';
+      } else {
+        alert('Error sending — please try again.');
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+      }
+    }).catch(function(){
+      alert('Network error — please try again.');
+      btn.disabled = false;
+      btn.textContent = 'Send Message';
+    });
+  }
+
+  document.querySelectorAll('.ability-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      if (tab.classList.contains('active')) return;
+      const targetId = tab.dataset.target;
+      document.querySelectorAll('.ability-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      document.querySelectorAll('.ability-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      const panel = document.getElementById(targetId);
+      panel.classList.add('active');
+      panel.querySelectorAll('.reveal').forEach((el, idx) => {
+        el.classList.remove('in');
+        void el.offsetWidth;
+        setTimeout(() => el.classList.add('in'), 50 + idx * 90);
+      });
+    });
+  });
+
+  /* ---------- Architektur-Diagramm: klickbare Pfeile ---------- */
+  (function () {
+    const fig = document.querySelector('.figure');
+    const tip = document.getElementById('diaTip');
+    if (!fig || !tip) return;
+    const titleEl = tip.querySelector('.dia-tip-title');
+    const bodyEl = tip.querySelector('p');
+    let current = null;
+
+    function closeTip() {
+      tip.classList.remove('show');
+      if (current) { current.classList.remove('on'); current = null; }
+    }
+
+    document.querySelectorAll('.edge').forEach(g => {
+      g.addEventListener('click', e => {
+        e.stopPropagation();
+        if (current && current !== g) current.classList.remove('on');
+        g.classList.add('on');
+        current = g;
+        titleEl.textContent = g.dataset.title || '';
+        bodyEl.textContent = g.dataset.detail || '';
+        const fr = fig.getBoundingClientRect();
+        const tw = 280;
+        let x = e.clientX - fr.left + 14;
+        let y = e.clientY - fr.top + 14;
+        if (x + tw > fig.clientWidth - 8) x = fig.clientWidth - tw - 8;
+        if (x < 8) x = 8;
+        tip.style.left = x + 'px';
+        tip.style.top = y + 'px';
+        tip.classList.add('show');
+      });
+    });
+
+    fig.addEventListener('click', closeTip);
+    tip.addEventListener('click', e => e.stopPropagation());
+    const closeBtn = tip.querySelector('.dia-tip-close');
+    if (closeBtn) closeBtn.addEventListener('click', e => { e.stopPropagation(); closeTip(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTip(); });
+  })();
+
+  // Case body read-more toggle (mobile only)
+  (function(){
+    const btn = document.getElementById('caseToggle');
+    const more = document.getElementById('caseMore');
+    if (!btn || !more) return;
+    btn.addEventListener('click', () => {
+      const open = more.classList.toggle('open');
+      btn.classList.toggle('open', open);
+      btn.firstChild.textContent = open ? 'Show less ' : 'Read more ';
+    });
+  })();
+
+  // Mobile architecture journey (swipe carousel)
+  (function(){
+    const track = document.getElementById('ajTrack');
+    if (!track) return;
+    const cards = Array.from(track.querySelectorAll('.aj-card'));
+    const dotsWrap = document.getElementById('ajDots');
+    const prev = document.getElementById('ajPrev');
+    const next = document.getElementById('ajNext');
+    let active = 0;
+
+    cards.forEach((_, i) => {
+      const d = document.createElement('button');
+      d.className = 'aj-dot' + (i === 0 ? ' on' : '');
+      d.type = 'button';
+      d.setAttribute('aria-label', 'Station ' + (i + 1));
+      d.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(d);
+    });
+    const dots = Array.from(dotsWrap.children);
+
+    function goTo(i){
+      i = Math.max(0, Math.min(cards.length - 1, i));
+      cards[i].scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+    }
+    function setActive(i){
+      if (i === active) return;
+      active = i;
+      dots.forEach((d, idx) => d.classList.toggle('on', idx === i));
+      prev.disabled = (i === 0);
+      next.disabled = (i === cards.length - 1);
+    }
+
+    prev.addEventListener('click', () => goTo(active - 1));
+    next.addEventListener('click', () => goTo(active + 1));
+
+    // Sync active card with scroll position
+    let raf = null;
+    track.addEventListener('scroll', () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        const center = track.scrollLeft + track.clientWidth / 2;
+        let best = 0, bestDist = Infinity;
+        cards.forEach((c, i) => {
+          const cc = c.offsetLeft + c.offsetWidth / 2;
+          const dist = Math.abs(cc - center);
+          if (dist < bestDist){ bestDist = dist; best = i; }
+        });
+        setActive(best);
+      });
+    }, {passive:true});
+  })();
+</script>
+</body>
+</html>
